@@ -4,7 +4,6 @@ export interface ICoordinates {
 }
 
 export interface IFormattedCoordinates {
-    latitude: number;
-    longitude: number;
-  }
-  
+  latitude: number;
+  longitude: number;
+}

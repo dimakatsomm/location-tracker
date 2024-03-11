@@ -9,9 +9,9 @@ const locationSchema = new Schema({
         unique: true,
         default: randomUUID
     },
-    altitude: {
-        type: Number,
-        required: false
+    userId: {
+        type: Schema.Types.UUID,
+        required: true
     },
     latitude: {
         type: Number,
@@ -49,4 +49,4 @@ const locationSchema = new Schema({
 
 locationSchema.index({ latitude: 1, longitude: 1}, { unique: false});
 
-export const Location = model<ILocation, any>('Locations', locationSchema);
+export const Location = model<ILocation, any>('Location', locationSchema, 'locations');

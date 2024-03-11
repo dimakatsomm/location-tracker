@@ -1,6 +1,5 @@
 export interface ILocation {
     id: string,
-    altitude?: number,
     latitude: number,
     longitude: number,
     country: string,
@@ -8,4 +7,5 @@ export interface ILocation {
     city: string,
     zipCode?: string,
     street?: string,
+    userId: string,
 }
