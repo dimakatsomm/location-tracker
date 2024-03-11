@@ -42,10 +42,9 @@ userSchema.pre('save', async function (next) {
     if (!user.isModified('password')) return next();
 
     try {
-        const salt = await genSalt(C.SALT_WORK_FACTOR);
-    user.password = await hash(user.password, salt);
-    next();
-
+      const salt = await genSalt(C.SALT_WORK_FACTOR);
+      user.password = await hash(user.password, salt);
+      next();
     } catch(e: any) {
         next(e);
     }
