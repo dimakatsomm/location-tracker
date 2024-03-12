@@ -29,7 +29,7 @@ const locationSchema = new Schema({
         type: String,
         required: true,
         uppercase: true,
-        tstringrim: true,
+        trim: true,
         minLength: 2,
         maxLength: 3
     },

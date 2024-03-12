@@ -3,6 +3,7 @@ import { Schema, model } from "mongoose";
 import { IUser } from "database/types/user.type";
 import { genSalt, hash } from "bcrypt";
 import * as C from "../../constants";
+import { isEmail } from "validator";
 
 const userSchema = new Schema({
     _id: {
@@ -13,25 +14,33 @@ const userSchema = new Schema({
     },
     firstName: {
         type: String,
+        trim: true,
         required: true
     },
     lastName: {
         type: String,
+        trim: true,
         required: true
     },
     emailAddress: {
         type: String,
+        lowercase: true,
+        trim: true,
         required: true,
         unique: true,
+        validate: [ isEmail ],
         
     },
     username: {
         type: String,
+        lowercase: true,
+        trim: true,
         required: true,
         unique: true,
     },
     password: {
         type: String,
+        trim: true,
         required: true,
     },
 }, { timestamps: true });
