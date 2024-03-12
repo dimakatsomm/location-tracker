@@ -41,4 +41,14 @@ export class LocationService {
       street: `${location[0].streetNumber} ${location[0].streetName}`,
     });
   }
+
+  /**
+   * @method listLocationHistory
+   * @async
+   * @param {string} userId
+   * @returns {Promise<void>}
+   */
+  async listLocationHistory(userId: string): Promise<ILocation[]> {
+    return Location.find({ userId });
+  }
 }
