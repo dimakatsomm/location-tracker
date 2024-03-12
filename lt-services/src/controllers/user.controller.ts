@@ -1,6 +1,6 @@
 import { compare } from 'bcrypt';
 import { IUser } from 'database/types/user.type';
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { IAppUser, ILoginUser, INewUser } from 'interfaces/user.interface';
 import { sign } from 'jsonwebtoken';
 import { UserService } from 'services/user.service';
@@ -19,17 +19,21 @@ export class UserController {
    * @param {Request} req
    * @param {Response} res
    */
-  register = async (req: Request, res: Response, next: NextFunction) => {
+  register = async (req: Request, res: Response) => {
     try {
       const newUser = req.body as INewUser;
-      const userExists = await this.userService.getUserWithUsernameOrEmail({ username: newUser.username, emailAddress: newUser.emailAddress, password: '' });
-      if (!!userExists) {
-        return res.status(409).json({ status: false, data: { message: `Username or email address is already in use.`}});
+      const userExists = await this.userService.getUserWithUsernameOrEmail({
+        username: newUser.username,
+        emailAddress: newUser.emailAddress,
+        password: '',
+      });
+      if (userExists) {
+        return res.status(409).json({ status: false, data: { message: `Username or email address is already in use.` } });
       }
 
       const user: IAppUser = await this.userService.register(newUser);
 
-      const token = sign({ userId: user.id }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_EXPIRES_IN});
+      const token = sign({ userId: user.id }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_EXPIRES_IN });
 
       return res.status(201).json({ status: true, data: { user, token } });
     } catch (e) {
@@ -45,25 +49,25 @@ export class UserController {
    * @param {Request} req
    * @param {Response} res
    */
-  login = async (req: Request, res: Response, next: NextFunction) => {
+  login = async (req: Request, res: Response) => {
     try {
       const loginUser = req.body as ILoginUser;
       if (!loginUser?.username && !loginUser?.emailAddress) {
-        return res.status(404).json({ status: false, data : { message: `No username or email provided for login.` }});
+        return res.status(404).json({ status: false, data: { message: `No username or email provided for login.` } });
       }
       const user: IUser = await this.userService.getUserWithUsernameOrEmail(loginUser);
       if (!user) {
-        return res.status(400).json({ status: false, data : { message: `User login details provided are incorrect.` }});
+        return res.status(400).json({ status: false, data: { message: `User login details provided are incorrect.` } });
       }
 
       const correctPassword: boolean = await compare(loginUser.password, user.password);
       if (!correctPassword) {
-        return res.status(403).json({ status: false, data : { message: `User login details provided are incorrect.` }});
+        return res.status(403).json({ status: false, data: { message: `User login details provided are incorrect.` } });
       }
 
-      const token = sign({ userId: user.id }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_EXPIRES_IN});
+      const token = sign({ userId: user.id }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_EXPIRES_IN });
 
-      return res.status(200).json({ status: true, data: { user, token }});
+      return res.status(200).json({ status: true, data: { user, token } });
     } catch (e) {
       console.error(e);
       return res.status(500).json({ status: false, data: e });

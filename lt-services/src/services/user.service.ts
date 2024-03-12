@@ -1,7 +1,7 @@
-import { User } from "database/models/user.model";
-import { IUser } from "database/types/user.type";
-import { IAppUser, ILoginUser, INewUser } from "interfaces/user.interface";
-import { Service } from "typedi";
+import { User } from 'database/models/user.model';
+import { IUser } from 'database/types/user.type';
+import { IAppUser, ILoginUser, INewUser } from 'interfaces/user.interface';
+import { Service } from 'typedi';
 
 @Service()
 export class UserService {

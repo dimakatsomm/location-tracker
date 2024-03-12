@@ -1,6 +1,6 @@
 import * as C from '../constants';
 import { NextFunction, Response } from 'express';
-import { IAuthUser, IJwtPayload, IUserRequest } from 'interfaces/auth.interface';
+import { IAuthUser, IJwtPayload } from 'interfaces/auth.interface';
 import { verify } from 'jsonwebtoken';
 import { isJWT } from 'validator';
 
