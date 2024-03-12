@@ -22,7 +22,7 @@ export class LocationController {
   saveLocation = async (req: IUserRequest, res: Response, next: NextFunction) => {
     try {
       const user: IUser = await this.userService.checkIfUserExists(req.auth.userId);
-      if (!!user) {
+      if (!!!user) {
         return res.status(404).json({ status: false, data : { message: `User does not exist.` }});
       }
 
@@ -46,7 +46,7 @@ export class LocationController {
   locationHistory = async (req: IUserRequest, res: Response, next: NextFunction) => {
     try {
       const user: IUser = await this.userService.checkIfUserExists(req.auth.userId);
-      if (!!user) {
+      if (!!!user) {
         return res.status(404).json({ status: false, data : { message: `User does not exist.` }});
       }
 

@@ -24,7 +24,7 @@ export class UserController {
       const newUser = req.body as INewUser;
       const userExists = await this.userService.getUserWithUsernameOrEmail({ username: newUser.username, emailAddress: newUser.emailAddress, password: '' });
       if (!!userExists) {
-        return res.status(404).json({ status: false, data: { message: `Username or email address is already in use.`}});
+        return res.status(409).json({ status: false, data: { message: `Username or email address is already in use.`}});
       }
 
       const user: IAppUser = await this.userService.register(newUser);
@@ -34,7 +34,7 @@ export class UserController {
       return res.status(201).json({ status: true, data: { user, token } });
     } catch (e) {
       console.error(e);
-      next(e);
+      return res.status(500).json({ status: false, data: e });
     }
   };
 
@@ -53,7 +53,7 @@ export class UserController {
       }
       const user: IUser = await this.userService.getUserWithUsernameOrEmail(loginUser);
       if (!user) {
-        return res.status(403).json({ status: false, data : { message: `User login details provided are incorrect.` }});
+        return res.status(400).json({ status: false, data : { message: `User login details provided are incorrect.` }});
       }
 
       const correctPassword: boolean = await compare(loginUser.password, user.password);
@@ -61,7 +61,7 @@ export class UserController {
         return res.status(403).json({ status: false, data : { message: `User login details provided are incorrect.` }});
       }
 
-      const token = sign({ userId: user.id }, C.JWT_SECRET_KEY, { expiresIn: '1h'});
+      const token = sign({ userId: user.id }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_EXPIRES_IN});
 
       return res.status(200).json({ status: true, data: { user, token }});
     } catch (e) {

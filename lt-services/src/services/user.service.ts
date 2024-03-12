@@ -21,7 +21,7 @@ export class UserService {
    * @returns {Promise<IUser>}
    */
   getUserWithUsernameOrEmail(user: ILoginUser): Promise<IUser> {
-    return User.findOne( $or: [{ username: user.username }, { emailAddress: user.emailAddress }]);
+    return User.findOne({ $or: [{ username: user.username }, { emailAddress: user.emailAddress }] });
   }
 
   /**
