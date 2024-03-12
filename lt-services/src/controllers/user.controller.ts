@@ -29,7 +29,7 @@ export class UserController {
 
       const user: IAppUser = await this.userService.register(newUser);
 
-      const token = sign({ userId: user.id }, C.JWT_SECRET_KEY, { expiresIn: '1h'});
+      const token = sign({ userId: user.id }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_EXPIRES_IN});
 
       return res.status(201).json({ status: true, data: { user, token } });
     } catch (e) {
