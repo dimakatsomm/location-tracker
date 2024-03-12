@@ -1,5 +1,4 @@
 import { Request } from 'express';
-import { IAppUser } from './user.interface';
 import { JwtPayload } from 'jsonwebtoken';
 
 export interface IUserRequest extends Request {
@@ -9,9 +8,9 @@ export interface IUserRequest extends Request {
 }
 
 export interface IAuthUser {
-    auth: {
-        userId: string;
-    }
+  auth: {
+    userId: string;
+  };
 }
 
 export interface IJwtPayload extends JwtPayload {

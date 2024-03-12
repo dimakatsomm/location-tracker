@@ -1,6 +1,6 @@
 import { ILocation } from 'database/types/location.type';
 import { IUser } from 'database/types/user.type';
-import { NextFunction, Request, Response } from 'express';
+import { Response } from 'express';
 import { IUserRequest } from 'interfaces/auth.interface';
 import { ICoordinates } from 'interfaces/location.interface';
 import { LocationService } from 'services/location.service';
@@ -10,7 +10,10 @@ import { Inject, Service } from 'typedi';
 @Service()
 export class LocationController {
   // eslint-disable-next-line no-useless-constructor
-  constructor(@Inject() private locationService: LocationService, @Inject() private userService: UserService) {}
+  constructor(
+    @Inject() private locationService: LocationService,
+    @Inject() private userService: UserService,
+  ) {}
 
   /**
    * @method reverseGeocode
@@ -19,11 +22,11 @@ export class LocationController {
    * @param {IUserRequest} req
    * @param {Response} res
    */
-  saveLocation = async (req: IUserRequest, res: Response, next: NextFunction) => {
+  saveLocation = async (req: IUserRequest, res: Response) => {
     try {
       const user: IUser = await this.userService.checkIfUserExists(req.auth.userId);
-      if (!!!user) {
-        return res.status(404).json({ status: false, data : { message: `User does not exist.` }});
+      if (!user) {
+        return res.status(404).json({ status: false, data: { message: `User does not exist.` } });
       }
 
       const coordinates = req.body as ICoordinates;
@@ -43,11 +46,11 @@ export class LocationController {
    * @param {IUserRequest} req
    * @param {Response} res
    */
-  locationHistory = async (req: IUserRequest, res: Response, next: NextFunction) => {
+  locationHistory = async (req: IUserRequest, res: Response) => {
     try {
       const user: IUser = await this.userService.checkIfUserExists(req.auth.userId);
-      if (!!!user) {
-        return res.status(404).json({ status: false, data : { message: `User does not exist.` }});
+      if (!user) {
+        return res.status(404).json({ status: false, data: { message: `User does not exist.` } });
       }
 
       const locations: ILocation[] = await this.locationService.listLocationHistory(user.id);
