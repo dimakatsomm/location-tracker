@@ -16,7 +16,7 @@ export class LocationController {
   ) {}
 
   /**
-   * @method reverseGeocode
+   * @method saveLocation
    * @instance
    * @async
    * @param {IUserRequest} req
