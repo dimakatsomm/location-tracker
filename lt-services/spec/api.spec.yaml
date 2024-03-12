@@ -1,0 +1,192 @@
+openapi: 3.0.3
+info:
+  title: Location Tracker API
+  version: 1.0.0
+  contact:
+    name: Dimakatso
+    email: dimakatsomm@icloud.com
+tags:
+  - name: auth
+    description: User authentication service
+  - name: locations
+    description: User location service
+paths:
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: User login
+      description: User login using username/email and password
+      operationId: loginUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginUser'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppUser'
+        '400':
+          description: Bad request
+        '403':
+          description: Forbidden
+        '500':
+          description: Invalid request
+  /auth/register:
+    post:
+      tags:
+        - auth
+      summary: User registration
+      description: User registration using user details
+      operationId: registerUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewUser'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppUser'
+        '409':
+          description: Conflicted
+        '500':
+          description: Invalid request
+  /locations:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - locations
+      summary: User location history
+      description: User location history
+      operationId: userLocationHistory
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Locations'
+        '500':
+          description: Invalid request
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - locations
+      summary: Save user location
+      description: Save user location
+      operationId: saveUserLocation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCoordinates'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+        '404':
+          description: Not found
+        '500':
+          description: Invalid request
+#components
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT   
+  schemas:
+    LoginUser:
+      type: object
+      properties:
+        username:
+          type: string
+        emailAddress:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+      required: [password]
+    NewUser:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        username:
+          type: string
+        emailAddress:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+      required: [firstName,lastName,username,emailAddress,password]
+    AppUser:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        username:
+          type: string
+        emailAddress:
+          type: string
+          format: email
+      required: [firstName,lastName,username,emailAddress]
+    UserCoordinates:
+      type: object
+      properties:
+        lat:
+          type: number
+          format: float
+        lon:
+          type: number
+          format: float
+      required: [lat,lon]
+    Location:
+      type: object
+      properties:
+        latitude:
+          type: number
+          format: float
+        longitude:
+          type: number
+          format: float
+        country:
+          type: string
+        countryCode:
+          type: string
+          minLength: 2
+          maxLength: 3
+        city:
+          type: string
+        zipCode:
+          type: string
+        street:
+          type: string
+      required: [latitude,longitude,country,countryCode,city]
+    Locations:
+      type: array
+      items:
+        $ref: '#/components/schemas/Location'
+
