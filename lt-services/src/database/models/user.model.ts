@@ -48,7 +48,17 @@ const userSchema = new Schema(
       required: true,
     },
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+    toJSON: {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      transform: function (doc, ret) {
+        ret.id = ret._id.toString();
+        delete ret._id;
+        delete ret.__v;
+      },
+    },
+  },
 );
 
 userSchema.pre('save', async function (next) {

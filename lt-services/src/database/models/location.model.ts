@@ -9,7 +9,7 @@ const locationSchema = new Schema(
       required: true,
       default: randomUUID,
     },
-    userId: {
+    _userId: {
       type: Schema.Types.UUID,
       required: true,
       ref: 'User',
@@ -47,7 +47,18 @@ const locationSchema = new Schema(
       required: false,
     },
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+    toJSON: {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      transform: function (doc, ret) {
+        ret.id = ret._id.toString();
+        ret.userId = ret._userId.toString();
+        delete ret._id;
+        delete ret.__v;
+      },
+    },
+  },
 );
 
 locationSchema.index({ latitude: 1, longitude: 1 }, { unique: false });
