@@ -18,7 +18,7 @@ const swaggerDoc = loadAll(apiSpec, null, { json: true })[0] as JsonObject;
 
 app.use(express.json());
 app.use('/services', serve, setup(swaggerDoc));
-app.use(middleware({ apiSpec: swaggerDoc as OpenAPIV3.Document, validateResponses: true, validateSecurity: true }));
+app.use(middleware({ apiSpec: swaggerDoc as OpenAPIV3.Document, validateSecurity: true }));
 app.use('/auth', authRouter);
 app.use('/locations', locationRouter);
 

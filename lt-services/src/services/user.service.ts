@@ -1,7 +1,9 @@
 import { Service } from 'typedi';
+import { genSalt, hashSync } from 'bcrypt';
 import { User } from '../database/models/user.model';
 import { IUser } from '../database/types/user.type';
-import { IAppUser, ICredentials, INewUser } from '../interfaces/user.interface';
+import { ICredentials, INewUser, IVerifyUser } from '../interfaces/user.interface';
+import * as C from '../constants';
 
 @Service()
 export class UserService {
@@ -9,10 +11,12 @@ export class UserService {
    * @method register
    * @async
    * @param {INewUser} newUser
-   * @returns {Promise<IUser>}
+   * @returns {Promise<IVerifyUser>}
    */
-  async register(newUser: INewUser): Promise<IAppUser> {
-    return (await User.create(newUser)) as IAppUser;
+  async register(newUser: INewUser): Promise<IVerifyUser> {
+    const user = (await User.create(newUser))
+    await this.updatePassword(user.id, newUser.password);
+    return user as IVerifyUser;
   }
 
   /**
@@ -31,6 +35,15 @@ export class UserService {
    */
   checkIfUserExists(userId: string): Promise<IUser | null> {
     return User.findOne({ _id: userId });
+  }
+
+  /**
+   * @method checkIfUserExistsByEmail
+   * @param {string} email
+   * @returns {Promise<IUser>}
+   */
+  checkIfUserExistsByEmail(email: string): Promise<IUser | null> {
+    return User.findOne({ emailAddress: email });
   }
 
   /**
@@ -61,6 +74,8 @@ export class UserService {
    * @returns {Promise<void>}
    */
   async updatePassword(userId: string, password: string): Promise<void> {
-    await User.updateOne({ _id: userId }, { password });
+    const salt = await genSalt(C.SALT_WORK_FACTOR);
+    const hashedPassword = await hashSync(password, salt);
+    await User.updateOne({ _id: userId }, { password: hashedPassword });
   }
 }

@@ -53,7 +53,7 @@ const userSchema = new Schema(
     toJSON: {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       transform: function (doc, ret) {
-        ret.id = ret._id.toString();
+        ret.id = doc._id;
         delete ret._id;
         delete ret.__v;
       },
@@ -61,12 +61,12 @@ const userSchema = new Schema(
   },
 );
 
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
+userSchema.pre(['save', 'findOneAndUpdate'], { document: true, query: false }, async function (next) {
+  console.log(this.isModified('password'));
 
   try {
     const salt = await genSalt(C.SALT_WORK_FACTOR);
-    this.password = await hash(this.password, salt);
+    const hashedPassword = await hash(this.password, salt);
     next();
   } catch (e) {
     next(e as CallbackError);

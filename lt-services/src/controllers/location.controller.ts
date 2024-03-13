@@ -31,9 +31,10 @@ export class LocationController {
       const location: ILocation = await this.locationService.reverseGeocode(coordinates, user.id);
 
       return res.status(201).json({ status: true, data: location });
-    } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
       console.error(e);
-      return res.status(500).json({ status: false, data: e });
+      return res.status(500).json({ status: false, data: { message: e.data?.message || e.message, error: e } });
     }
   };
 
@@ -54,9 +55,10 @@ export class LocationController {
       const locations: ILocation[] = await this.locationService.listLocationHistory(user.id);
 
       return res.status(201).json({ status: true, data: locations });
-    } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
       console.error(e);
-      return res.status(500).json({ status: false, data: e });
+      return res.status(500).json({ status: false, data: { message: e.data?.message || e.message, error: e } });
     }
   };
 }

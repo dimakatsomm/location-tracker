@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
 import * as C from '../constants';
-import { IAppUser } from 'interfaces/user.interface';
+import { IAppUser, IVerifyUser } from 'interfaces/user.interface';
 import { createTransport } from 'nodemailer';
 
 const trasporter = createTransport({
@@ -21,9 +21,9 @@ export class NotificationService {
    * @param {string} token
    * @returns {Promise<void>}
    */
-  async sendVerificationEmail(user: IAppUser, token: string): Promise<void> {
+  async sendVerificationEmail(user: IVerifyUser, token: string): Promise<void> {
     const mailOptions = {
-      from: C.SMTP_LOGIN,
+      from: `Location Tracker <${C.SMTP_LOGIN}>`,
       to: user.emailAddress,
       subject: 'Account Verification for Location Tracker',
       text: `Hello ${user.firstName} ${user.lastName}\n\n Please verify your account by clicking the link: ${C.SERVER_LINK}/?token=${token}\n\nThank you!\nLocation Tracker`,
@@ -35,7 +35,6 @@ export class NotificationService {
       throw new Error('Email sending failed');
     }
   }
-  }
 
   /**
    * @method sendForgotPasswordEmail
@@ -46,10 +45,10 @@ export class NotificationService {
    */
   async sendForgotPasswordEmail(user: IAppUser, token: string): Promise<void> {
     const mailOptions = {
-      from: C.SMTP_LOGIN,
+      from: `Location Tracker <${C.SMTP_LOGIN}>`,
       to: user.emailAddress,
       subject: 'Reset Password for Location Tracker',
-      text: `Hello ${user.firstName} ${user.lastName}\n\n Please reset your password by clicking the link: ${C.APP_LINK}/forgot-password/?token=${token}\n\nThank you!\nLocation Tracker`,
+      text: `Hello ${user.firstName} ${user.lastName}\n\n Please reset your password by clicking the link: ${C.APP_LINK}/forgot-password/?t=${token}\n\nThank you!\nLocation Tracker`,
     };
 
     await trasporter.sendMail(mailOptions);

@@ -9,7 +9,7 @@ servers:
   - url: /
     description: Self
   - url: http://localhost:5000
-    description: local
+    description: Local
 tags:
   - name: auth
     description: User authentication service
@@ -47,7 +47,7 @@ paths:
                         $ref: '#/components/schemas/AppUser'
                       token:
                         type: string
-                        format: jwt
+                        format: JWT
         '400':
           description: Bad request
           content:
@@ -82,6 +82,10 @@ paths:
       responses:
         '201':
           description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessDto'
         '409':
           description: Conflicted
           content:
@@ -95,7 +99,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorDto'
   /auth/verify:
-    post:
+    get:
       tags:
         - auth
       summary: User verification
@@ -107,6 +111,7 @@ paths:
           schema:
             type: string
           description: The token to verify user
+          required: true
       responses:
         '208':
           description: Already reported
@@ -114,8 +119,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessDto'
-        '300':
+        '302':
           description: Redirect
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
         '409':
           description: Conflicted
           content:
@@ -128,19 +145,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDto'
-  /auth/forgot-password:
+  /auth/resend-verification:
     post:
       tags:
         - auth
-      summary: User forgot password
-      description: Send user email to reset password
-      operationId: forgotPassword
+      summary: User re-verification
+      description: Resends user verification email
+      operationId: resendVerification
       parameters:
         - in: query
-          name: token
+          name: email
           schema:
             type: string
-          description: The token to verify user
+            format: email
+          description: The email of user that has to verify account
+          required: true
       responses:
         '200':
           description: Successful operation
@@ -148,8 +167,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessDto'
-        '403':
-          description: Forbidden
+        '208':
+          description: Already reported
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessDto'
+        '401':
+          description: Unauthorized
           content:
             application/json:
               schema:
@@ -170,17 +195,32 @@ paths:
     post:
       tags:
         - auth
-      summary: User verification
-      description: User registration using user details
-      operationId: verifyUser
+      summary: User reset password
+      description: Resets user password
+      operationId: resetPassword
       parameters:
         - in: query
           name: token
           schema:
             type: string
           description: The token to verify user
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                password:
+                  type: string
+                  format: password
       responses:
-        '300':
+        '208':
+          description: Already reported
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessDto'
+        '302':
           description: Redirect
         '403':
           description: Forbidden
@@ -193,7 +233,47 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorDto''
+                $ref: '#/components/schemas/ErrorDto'
+        '500':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+  /auth/forgot-password:
+    post:
+      tags:
+        - auth
+      summary: User forgot password
+      description: Send user email to reset password
+      operationId: forgotPassword
+      parameters:
+        - in: query
+          name: email
+          schema:
+            type: string
+            format: email
+          description: The email of user that has to reset password
+          required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessDto'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
         '500':
           description: Invalid request
           content:
@@ -361,5 +441,7 @@ components:
           type: object
           properties:
             message:
+              type: string
+            error:
               type: string
               
