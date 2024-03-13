@@ -6,6 +6,7 @@ import { ICredentials, INewUser, IVerifyUser } from '../interfaces/user.interfac
 import { UserService } from '../services/user.service';
 import * as C from '../constants';
 import { NotificationService } from '../services/notification.service';
+import { mapUserToAppUser } from '../mappers/auth.mapper';
 
 @Service()
 export class AuthController {
@@ -129,7 +130,7 @@ export class AuthController {
 
       const token = sign({ userId: user.id }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_LOGIN_EXPIRES_IN });
 
-      return res.status(200).json({ status: true, data: { user, token } });
+      return res.status(200).json({ status: true, data: { user: mapUserToAppUser(user), token } });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       console.error(e);
