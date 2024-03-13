@@ -23,7 +23,7 @@ export class NotificationService {
    */
   async sendVerificationEmail(user: IAppUser, token: string): Promise<void> {
     const mailOptions = {
-      from: C.SMTP_LOGIN,
+      from: `Location Tracker <${C.SMTP_LOGIN}>`,
       to: user.emailAddress,
       subject: 'Account Verification for Location Tracker',
       text: `Hello ${user.firstName} ${user.lastName}\n\n Please verify your account by clicking the link: ${C.SERVER_LINK}/?token=${token}\n\nThank you!\nLocation Tracker`,
@@ -34,5 +34,23 @@ export class NotificationService {
       console.error('Failed to send verification email:', error);
       throw new Error('Email sending failed');
     }
+  }
+
+  /**
+   * @method sendForgotPasswordEmail
+   * @async
+   * @param {IUser} user
+   * @param {string} token
+   * @returns {Promise<void>}
+   */
+  async sendForgotPasswordEmail(user: IAppUser, token: string): Promise<void> {
+    const mailOptions = {
+      from: `Location Tracker <${C.SMTP_LOGIN}>`,
+      to: user.emailAddress,
+      subject: 'Reset Password for Location Tracker',
+      text: `Hello ${user.firstName} ${user.lastName}\n\n Please reset your password by clicking the link: ${C.APP_LINK}/forgot-password/?token=${token}\n\nThank you!\nLocation Tracker`,
+    };
+
+    await trasporter.sendMail(mailOptions);
   }
 }

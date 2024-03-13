@@ -10,5 +10,8 @@ router.post('/register', controller.register);
 router.post('/login', controller.login);
 router.get('/verify', validateUser(), controller.verify);
 router.post('/resend-verification', controller.resendVerification);
+router.post('/verify', validateUser(), controller.verify);
+router.post('/forgot-password', controller.forgotPassword);
+router.get('/reset-password', validateUser(), controller.resetPassword);
 
 export default router;
