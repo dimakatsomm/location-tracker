@@ -29,7 +29,7 @@ export const validateUser = () => (req: Request, res: Response, next: NextFuncti
   try {
     const decodedToken = verify(token, C.JWT_SECRET_KEY) as JwtPayload;
     req.auth.userId = decodedToken.userId;
-    req.auth.email = decodedToken.email;
+    req.auth.email = decodedToken.email || '';
   } catch (e) {
     return res.status(401).json({ status: false, data: { message: 'Invalid user token. Access denied.' } });
   }

@@ -96,8 +96,6 @@ paths:
                 $ref: '#/components/schemas/ErrorDto'
   /auth/verify:
     post:
-      security:
-        - bearerAuth: []
       tags:
         - auth
       summary: User verification
@@ -116,7 +114,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessDto'
-        '302':
+        '300':
           description: Redirect
         '409':
           description: Conflicted
@@ -124,6 +122,78 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDto'
+        '500':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+  /auth/forgot-password:
+    post:
+      tags:
+        - auth
+      summary: User forgot password
+      description: Send user email to reset password
+      operationId: forgotPassword
+      parameters:
+        - in: query
+          name: token
+          schema:
+            type: string
+          description: The token to verify user
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessDto'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        '500':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+  /auth/reset-password:
+    post:
+      tags:
+        - auth
+      summary: User verification
+      description: User registration using user details
+      operationId: verifyUser
+      parameters:
+        - in: query
+          name: token
+          schema:
+            type: string
+          description: The token to verify user
+      responses:
+        '300':
+          description: Redirect
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto''
         '500':
           description: Invalid request
           content:

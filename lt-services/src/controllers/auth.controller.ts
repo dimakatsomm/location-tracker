@@ -50,7 +50,7 @@ export class AuthController {
    * @method verify
    * @instance
    * @async
-   * @param {IUserRequest} req
+   * @param {Request} req
    * @param {Response} res
    */
   verify = async (req: Request, res: Response) => {
@@ -99,6 +99,63 @@ export class AuthController {
       const token = sign({ userId: user.id }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_LOGIN_EXPIRES_IN });
 
       return res.status(200).json({ status: true, data: { user, token } });
+    } catch (e) {
+      console.error(e);
+      return res.status(500).json({ status: false, data: e });
+    }
+  };
+
+  /**
+   * @method forgotPassword
+   * @instance
+   * @async
+   * @param {Request} req
+   * @param {Response} res
+   */
+  forgotPassword = async (req: Request, res: Response) => {
+    try {
+      const loginUser = req.body as ICredentials;
+      const user = await this.userService.getUserWithUsernameOrEmail(loginUser);
+      if (!user) {
+        return res.status(404).json({ status: false, data: { message: `User does not exist.` } });
+      }
+
+      if (!user.verified) {
+        return res.status(403).json({ status: false, data: { message: `Account not verified. Please verify account.` } });
+      }
+
+      const token = sign({ userId: user.id }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_FORGOT_PASSWORD_EXPIRES_IN });
+
+      await this.notificationService.sendForgotPasswordEmail(user, token);
+
+      return res.status(200).json({ status: true, data: { message: `Password reset link has been sent.` } });
+    } catch (e) {
+      console.error(e);
+      return res.status(500).json({ status: false, data: e });
+    }
+  };
+
+  /**
+   * @method resetPassword
+   * @instance
+   * @async
+   * @param {Request} req
+   * @param {Response} res
+   */
+  resetPassword = async (req: Request, res: Response) => {
+    try {
+      const user = await this.userService.checkIfUserExists(req.auth.userId);
+      if (!user) {
+        return res.status(404).json({ status: false, data: { message: `User does not exist.` } });
+      }
+
+      if (!user.verified) {
+        return res.status(403).json({ status: false, data: { message: `Account not verified. Please verify account.` } });
+      }
+
+      await this.userService.updatePassword(user.id, req.body.password);
+
+      return res.status(300).redirect(`${C.APP_LINK}/login`);
     } catch (e) {
       console.error(e);
       return res.status(500).json({ status: false, data: e });
