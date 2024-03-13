@@ -25,7 +25,7 @@ export class NotificationService {
     const mailOptions = {
       from: C.SMTP_LOGIN,
       to: user.emailAddress,
-      subject: 'Account Verification for Track',
+      subject: 'Account Verification for Location Tracker',
       text: `Hello ${user.firstName} ${user.lastName}\n\n Please verify your account by clicking the link: ${C.SERVER_LINK}/?token=${token}\n\nThank you!\nLocation Tracker`,
     };
 
