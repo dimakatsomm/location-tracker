@@ -28,7 +28,12 @@ export class NotificationService {
       subject: 'Account Verification for Location Tracker',
       text: `Hello ${user.firstName} ${user.lastName}\n\n Please verify your account by clicking the link: ${C.SERVER_LINK}/?token=${token}\n\nThank you!\nLocation Tracker`,
     };
-
-    await trasporter.sendMail(mailOptions);
+    try {
+      await trasporter.sendMail(mailOptions);
+    } catch (error) {
+      console.error('Failed to send verification email:', error);
+      throw new Error('Email sending failed');
+    }
+  }
   }
 }
