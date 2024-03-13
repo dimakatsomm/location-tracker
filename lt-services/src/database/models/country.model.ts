@@ -65,4 +65,4 @@ const countrySchema = new Schema(
   { timestamps: false },
 );
 
-export const Country: Model<ICountry> = model<ICountry>('Country', countrySchema, 'countries');
+export const Country = model<ICountry, Model<ICountry>>('Country', countrySchema, 'countries');

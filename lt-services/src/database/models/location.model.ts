@@ -53,4 +53,4 @@ const locationSchema = new Schema(
 
 locationSchema.index({ latitude: 1, longitude: 1 }, { unique: false });
 
-export const Location: Model<ILocation> = model<ILocation>('Location', locationSchema, 'locations');
+export const Location = model<ILocation, Model<ILocation>>('Location', locationSchema, 'locations');

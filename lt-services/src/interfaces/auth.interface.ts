@@ -13,6 +13,17 @@ export interface IAuthUser {
   };
 }
 
-export interface IJwtPayload extends JwtPayload {
+export interface IValidateUser {
+  auth: {
+    userId: string;
+    email: string;
+  };
+}
+export interface IJwtAuthPayload extends JwtPayload {
   userId: string;
+}
+
+export interface IJwtValidatePayload extends JwtPayload {
+  userId: string;
+  email: string;
 }

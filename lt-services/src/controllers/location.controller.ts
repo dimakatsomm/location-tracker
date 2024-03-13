@@ -1,6 +1,5 @@
 import { ILocation } from 'database/types/location.type';
-import { Response } from 'express';
-import { IUserRequest } from 'interfaces/auth.interface';
+import { Request, Response } from 'express';
 import { ICoordinates } from 'interfaces/location.interface';
 import { LocationService } from 'services/location.service';
 import { UserService } from 'services/user.service';
@@ -18,10 +17,10 @@ export class LocationController {
    * @method saveLocation
    * @instance
    * @async
-   * @param {IUserRequest} req
+   * @param {Request} req
    * @param {Response} res
    */
-  saveLocation = async (req: IUserRequest, res: Response) => {
+  saveLocation = async (req: Request, res: Response) => {
     try {
       const user = await this.userService.checkIfUserExists(req.auth.userId);
       if (!user) {
@@ -42,10 +41,10 @@ export class LocationController {
    * @method listLocationHistory
    * @instance
    * @async
-   * @param {IUserRequest} req
+   * @param {Request} req
    * @param {Response} res
    */
-  locationHistory = async (req: IUserRequest, res: Response) => {
+  locationHistory = async (req: Request, res: Response) => {
     try {
       const user = await this.userService.checkIfUserExists(req.auth.userId);
       if (!user) {

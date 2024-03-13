@@ -21,4 +21,4 @@ const languageSchema = new Schema(
   { timestamps: false },
 );
 
-export const Language: Model<ILanguage> = model<ILanguage>('Language', languageSchema, 'languages');
+export const Language = model<ILanguage, Model<ILanguage>>('Language', languageSchema, 'languages');

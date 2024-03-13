@@ -7,7 +7,7 @@ import * as C from '../constants';
 import { Inject, Service } from 'typedi';
 
 @Service()
-export class UserController {
+export class AuthController {
   // eslint-disable-next-line no-useless-constructor
   constructor(@Inject() private userService: UserService) {}
 
@@ -32,9 +32,34 @@ export class UserController {
 
       const user: IAppUser = await this.userService.register(newUser);
 
-      const token = sign({ userId: user.id }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_EXPIRES_IN });
+      const token = sign({ userId: user.id }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_VERIFY_EXPIRES_IN });
 
       return res.status(201).json({ status: true, data: { user, token } });
+    } catch (e) {
+      console.error(e);
+      return res.status(500).json({ status: false, data: e });
+    }
+  };
+
+  /**
+   * @method verify
+   * @instance
+   * @async
+   * @param {IUserRequest} req
+   * @param {Response} res
+   */
+  verify = async (req: Request, res: Response) => {
+    try {
+      const user = await this.userService.validateUser(req.auth.userId, req.auth.email || '');
+      if (!user) {
+        return res.status(404).json({ status: false, data: { message: `User does not exist.` } });
+      }
+
+      await this.userService.verifyUserAccount(user.id);
+
+      const token = sign({ userId: user.id }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_LOGIN_EXPIRES_IN });
+
+      return res.status(200).json({ status: true, data: { user, token } });
     } catch (e) {
       console.error(e);
       return res.status(500).json({ status: false, data: e });
@@ -64,7 +89,7 @@ export class UserController {
         return res.status(403).json({ status: false, data: { message: `User login details provided are incorrect.` } });
       }
 
-      const token = sign({ userId: user.id }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_EXPIRES_IN });
+      const token = sign({ userId: user.id }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_LOGIN_EXPIRES_IN });
 
       return res.status(200).json({ status: true, data: { user, token } });
     } catch (e) {

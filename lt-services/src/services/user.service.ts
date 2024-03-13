@@ -30,6 +30,26 @@ export class UserService {
    * @returns {Promise<IUser>}
    */
   checkIfUserExists(userId: string): Promise<IUser | null> {
-    return User.findOne({ id: userId });
+    return User.findOne({ _id: userId });
+  }
+
+  /**
+   * @method validateUser
+   * @param {string} userId
+   * @param {string} emailAddress
+   * @returns {Promise<IUser>}
+   */
+  validateUser(userId: string, emailAddress: string): Promise<IUser | null> {
+    return User.findOne({ $and: [{ _id: userId, emailAddress }] });
+  }
+
+  /**
+   * @method verifyUserAccount
+   * @async
+   * @param {string} userId
+   * @returns {Promise<void>}
+   */
+  async verifyUserAccount(userId: string): Promise<void> {
+    await User.updateOne({ _id: userId }, { verified: true });
   }
 }

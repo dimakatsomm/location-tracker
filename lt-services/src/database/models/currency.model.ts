@@ -28,4 +28,4 @@ const currencySchema = new Schema(
   { timestamps: false },
 );
 
-export const Currency: Model<ICurrency> = model<ICurrency>('Currency', currencySchema, 'currencies');
+export const Currency = model<ICurrency, Model<ICurrency>>('Currency', currencySchema, 'currencies');
