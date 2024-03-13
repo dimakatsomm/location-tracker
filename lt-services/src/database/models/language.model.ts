@@ -18,7 +18,17 @@ const languageSchema = new Schema(
       trim: true,
     },
   },
-  { timestamps: false },
+  {
+    timestamps: false,
+    toJSON: {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      transform: function (doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+      },
+    },
+  },
 );
 
 export const Language = model<ILanguage, Model<ILanguage>>('Language', languageSchema, 'languages');

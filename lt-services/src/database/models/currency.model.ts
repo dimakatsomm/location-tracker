@@ -25,7 +25,17 @@ const currencySchema = new Schema(
       maxLength: 3,
     },
   },
-  { timestamps: false },
+  {
+    timestamps: false,
+    toJSON: {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      transform: function (doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+      },
+    },
+  },
 );
 
 export const Currency = model<ICurrency, Model<ICurrency>>('Currency', currencySchema, 'currencies');
