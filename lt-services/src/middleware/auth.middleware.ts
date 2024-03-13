@@ -22,7 +22,6 @@ export const validateUserToken = () => (req: Request, res: Response, next: NextF
 
 export const validateUser = () => (req: Request, res: Response, next: NextFunction) => {
   const token = req.query.token as string;
-
   if (!token || !isJWT(token)) {
     return res.status(401).json({ status: false, data: { message: 'No user token provided. Access denied.' } });
   }

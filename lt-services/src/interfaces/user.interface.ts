@@ -19,3 +19,10 @@ export interface IAppUser {
   username: string;
   emailAddress: string;
 }
+
+export interface IVerifyUser {
+  id: string;
+  emailAddress: string;
+  firstName: string;
+  lastName: string;
+}

@@ -9,7 +9,7 @@ servers:
   - url: /
     description: Self
   - url: http://localhost:5000
-    description: local
+    description: Local
 tags:
   - name: auth
     description: User authentication service
@@ -47,7 +47,7 @@ paths:
                         $ref: '#/components/schemas/AppUser'
                       token:
                         type: string
-                        format: jwt
+                        format: JWT
         '400':
           description: Bad request
           content:
@@ -158,7 +158,7 @@ paths:
           schema:
             type: string
             format: email
-          description: The email of the account to reset password
+          description: The email of user that has to verify account
           required: true
       responses:
         '200':
@@ -192,18 +192,27 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorDto'
   /auth/reset-password:
-    get:
+    post:
       tags:
         - auth
-      summary: User verification
-      description: User registration using user details
-      operationId: verifyUser
+      summary: User reset password
+      description: Resets user password
+      operationId: resetPassword
       parameters:
         - in: query
           name: token
           schema:
             type: string
           description: The token to verify user
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                password:
+                  type: string
+                  format: password
       responses:
         '208':
           description: Already reported
@@ -211,7 +220,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessDto'
-        '300':
+        '302':
           description: Redirect
         '403':
           description: Forbidden
@@ -224,7 +233,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorDto''
+                $ref: '#/components/schemas/ErrorDto'
         '500':
           description: Invalid request
           content:
@@ -240,10 +249,12 @@ paths:
       operationId: forgotPassword
       parameters:
         - in: query
-          name: token
+          name: email
           schema:
             type: string
-          description: The token to verify user
+            format: email
+          description: The email of user that has to reset password
+          required: true
       responses:
         '200':
           description: Successful operation
@@ -263,40 +274,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDto'
-        '500':
-          description: Invalid request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-  /auth/reset-password:
-    post:
-      tags:
-        - auth
-      summary: User verification
-      description: User registration using user details
-      operationId: verifyUser
-      parameters:
-        - in: query
-          name: token
-          schema:
-            type: string
-          description: The token to verify user
-      responses:
-        '300':
-          description: Redirect
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-        '404':
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto''
         '500':
           description: Invalid request
           content:
