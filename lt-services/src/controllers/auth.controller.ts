@@ -126,7 +126,7 @@ export class AuthController {
 
       const token = sign({ userId: user.id }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_FORGOT_PASSWORD_EXPIRES_IN });
 
-      this.notificationService.sendForgotPasswordEmail(user, token);
+      await this.notificationService.sendForgotPasswordEmail(user, token);
 
       return res.status(200).json({ status: true, data: { message: `Password reset link has been sent.` } });
     } catch (e) {
@@ -153,7 +153,7 @@ export class AuthController {
         return res.status(403).json({ status: false, data: { message: `Account not verified. Please verify account.` } });
       }
 
-      this.userService.updatePassword(user.id, req.body.password);
+      await this.userService.updatePassword(user.id, req.body.password);
 
       return res.status(300).redirect(`${C.APP_LINK}/login`);
     } catch (e) {
