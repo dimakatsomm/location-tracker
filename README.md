@@ -85,9 +85,7 @@ classDiagram
     LocationController --> UserService : depends
 ```
 
-### README (Markdown)
-
-# lt-services/src Package Overview
+# Package Overview
 
 ## Services
 
