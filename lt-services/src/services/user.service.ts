@@ -61,4 +61,15 @@ export class UserService {
   async verifyUserAccount(userId: string): Promise<void> {
     await User.updateOne({ _id: userId }, { verified: true });
   }
+
+  /**
+   * @method verifyUserAccount
+   * @async
+   * @param {string} userId
+   * @param {string} password
+   * @returns {Promise<void>}
+   */
+  async updatePassword(userId: string, password: string): Promise<void> {
+    await User.updateOne({ _id: userId }, { password });
+  }
 }
