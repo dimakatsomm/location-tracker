@@ -1,10 +1,10 @@
 import { compare } from 'bcrypt';
 import { Request, Response } from 'express';
-import { IAppUser, ILoginUser, INewUser } from 'interfaces/user.interface';
-import { sign } from 'jsonwebtoken';
-import { UserService } from 'services/user.service';
-import * as C from '../constants';
 import { Inject, Service } from 'typedi';
+import { IAppUser, ICredentials, INewUser } from '../interfaces/user.interface';
+import { sign } from 'jsonwebtoken';
+import { UserService } from '../services/user.service';
+import * as C from '../constants';
 
 @Service()
 export class AuthController {
@@ -75,7 +75,7 @@ export class AuthController {
    */
   login = async (req: Request, res: Response) => {
     try {
-      const loginUser = req.body as ILoginUser;
+      const loginUser = req.body as ICredentials;
       if (!loginUser?.username && !loginUser?.emailAddress) {
         return res.status(404).json({ status: false, data: { message: `No username or email provided for login.` } });
       }
