@@ -1,15 +1,19 @@
 import { compare } from 'bcrypt';
 import { Request, Response } from 'express';
 import { Inject, Service } from 'typedi';
-import { IAppUser, ICredentials, INewUser } from '../interfaces/user.interface';
 import { sign } from 'jsonwebtoken';
+import { IAppUser, ICredentials, INewUser } from '../interfaces/user.interface';
 import { UserService } from '../services/user.service';
 import * as C from '../constants';
+import { NotificationService } from '../services/notification.service';
 
 @Service()
 export class AuthController {
   // eslint-disable-next-line no-useless-constructor
-  constructor(@Inject() private userService: UserService) {}
+  constructor(
+    @Inject() private userService: UserService,
+    @Inject() private notificationService: NotificationService,
+  ) {}
 
   /**
    * @method register
@@ -33,8 +37,9 @@ export class AuthController {
       const user: IAppUser = await this.userService.register(newUser);
 
       const token = sign({ userId: user.id }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_VERIFY_EXPIRES_IN });
+      await this.notificationService.sendVerificationEmail(user, token);
 
-      return res.status(201).json({ status: true, data: { user, token } });
+      return res.status(201).json({ status: true, data: { message: `Account verification link has been sent.` } });
     } catch (e) {
       console.error(e);
       return res.status(500).json({ status: false, data: e });
@@ -55,11 +60,13 @@ export class AuthController {
         return res.status(404).json({ status: false, data: { message: `User does not exist.` } });
       }
 
+      if (user.verified) {
+        return res.status(208).json({ status: true, data: { message: `User already verified. Please login.` } });
+      }
+
       await this.userService.verifyUserAccount(user.id);
 
-      const token = sign({ userId: user.id }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_LOGIN_EXPIRES_IN });
-
-      return res.status(200).json({ status: true, data: { user, token } });
+      return res.status(300).redirect(`${C.APP_LINK}/verified`);
     } catch (e) {
       console.error(e);
       return res.status(500).json({ status: false, data: e });

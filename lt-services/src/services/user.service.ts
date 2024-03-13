@@ -40,7 +40,7 @@ export class UserService {
    * @returns {Promise<IUser>}
    */
   validateUser(userId: string, emailAddress: string): Promise<IUser | null> {
-    return User.findOne({ $and: [{ _id: userId, emailAddress }] });
+    return User.findOne({ _id: userId, emailAddress });
   }
 
   /**
