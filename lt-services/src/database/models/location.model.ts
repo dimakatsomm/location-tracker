@@ -55,6 +55,7 @@ const locationSchema = new Schema(
         ret.id = ret._id.toString();
         ret.userId = ret._userId.toString();
         delete ret._id;
+        delete ret._userId;
         delete ret.__v;
       },
     },
