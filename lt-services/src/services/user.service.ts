@@ -12,7 +12,7 @@ export class UserService {
    * @returns {Promise<IUser>}
    */
   async register(newUser: INewUser): Promise<IAppUser> {
-    return User.create(newUser) as IAppUser;
+    return (await User.create(newUser)) as IAppUser;
   }
 
   /**
@@ -20,7 +20,7 @@ export class UserService {
    * @param {ILoginUser} user
    * @returns {Promise<IUser>}
    */
-  getUserWithUsernameOrEmail(user: ILoginUser): Promise<IUser> {
+  getUserWithUsernameOrEmail(user: ILoginUser): Promise<IUser | null> {
     return User.findOne({ $or: [{ username: user.username }, { emailAddress: user.emailAddress }] });
   }
 
@@ -29,7 +29,27 @@ export class UserService {
    * @param {string} userId
    * @returns {Promise<IUser>}
    */
-  async checkIfUserExists(userId: string): Promise<IUser> {
-    return User.findOne({ id: userId });
+  checkIfUserExists(userId: string): Promise<IUser | null> {
+    return User.findOne({ _id: userId });
+  }
+
+  /**
+   * @method validateUser
+   * @param {string} userId
+   * @param {string} emailAddress
+   * @returns {Promise<IUser>}
+   */
+  validateUser(userId: string, emailAddress: string): Promise<IUser | null> {
+    return User.findOne({ $and: [{ _id: userId, emailAddress }] });
+  }
+
+  /**
+   * @method verifyUserAccount
+   * @async
+   * @param {string} userId
+   * @returns {Promise<void>}
+   */
+  async verifyUserAccount(userId: string): Promise<void> {
+    await User.updateOne({ _id: userId }, { verified: true });
   }
 }

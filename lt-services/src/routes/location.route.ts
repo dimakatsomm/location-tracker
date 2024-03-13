@@ -1,6 +1,6 @@
 import express from 'express';
 import Container from 'typedi';
-import { validateUserToken } from '../middleware';
+import { validateUserToken } from '../middleware/auth.middleware';
 import { LocationController } from '../controllers/location.controller';
 
 const router = express.Router();

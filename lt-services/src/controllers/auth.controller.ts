@@ -1,5 +1,4 @@
 import { compare } from 'bcrypt';
-import { IUser } from 'database/types/user.type';
 import { Request, Response } from 'express';
 import { IAppUser, ILoginUser, INewUser } from 'interfaces/user.interface';
 import { sign } from 'jsonwebtoken';
@@ -8,7 +7,7 @@ import * as C from '../constants';
 import { Inject, Service } from 'typedi';
 
 @Service()
-export class UserController {
+export class AuthController {
   // eslint-disable-next-line no-useless-constructor
   constructor(@Inject() private userService: UserService) {}
 
@@ -33,9 +32,34 @@ export class UserController {
 
       const user: IAppUser = await this.userService.register(newUser);
 
-      const token = sign({ userId: user.id }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_EXPIRES_IN });
+      const token = sign({ userId: user.id }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_VERIFY_EXPIRES_IN });
 
       return res.status(201).json({ status: true, data: { user, token } });
+    } catch (e) {
+      console.error(e);
+      return res.status(500).json({ status: false, data: e });
+    }
+  };
+
+  /**
+   * @method verify
+   * @instance
+   * @async
+   * @param {IUserRequest} req
+   * @param {Response} res
+   */
+  verify = async (req: Request, res: Response) => {
+    try {
+      const user = await this.userService.validateUser(req.auth.userId, req.auth.email || '');
+      if (!user) {
+        return res.status(404).json({ status: false, data: { message: `User does not exist.` } });
+      }
+
+      await this.userService.verifyUserAccount(user.id);
+
+      const token = sign({ userId: user.id }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_LOGIN_EXPIRES_IN });
+
+      return res.status(200).json({ status: true, data: { user, token } });
     } catch (e) {
       console.error(e);
       return res.status(500).json({ status: false, data: e });
@@ -55,7 +79,7 @@ export class UserController {
       if (!loginUser?.username && !loginUser?.emailAddress) {
         return res.status(404).json({ status: false, data: { message: `No username or email provided for login.` } });
       }
-      const user: IUser = await this.userService.getUserWithUsernameOrEmail(loginUser);
+      const user = await this.userService.getUserWithUsernameOrEmail(loginUser);
       if (!user) {
         return res.status(400).json({ status: false, data: { message: `User login details provided are incorrect.` } });
       }
@@ -65,7 +89,7 @@ export class UserController {
         return res.status(403).json({ status: false, data: { message: `User login details provided are incorrect.` } });
       }
 
-      const token = sign({ userId: user.id }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_EXPIRES_IN });
+      const token = sign({ userId: user.id }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_LOGIN_EXPIRES_IN });
 
       return res.status(200).json({ status: true, data: { user, token } });
     } catch (e) {

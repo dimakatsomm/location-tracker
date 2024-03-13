@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto';
-import { Schema, model } from 'mongoose';
+import { CallbackError, Model, Schema, model } from 'mongoose';
 import { IUser } from 'database/types/user.type';
 import { genSalt, hash } from 'bcrypt';
 import * as C from '../../constants';
@@ -43,22 +43,25 @@ const userSchema = new Schema(
       trim: true,
       required: true,
     },
+    verified: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
   },
   { timestamps: true },
 );
 
 userSchema.pre('save', async function (next) {
-  const user = this;
-
-  if (!user.isModified('password')) return next();
+  if (!this.isModified('password')) return next();
 
   try {
     const salt = await genSalt(C.SALT_WORK_FACTOR);
-    user.password = await hash(user.password, salt);
+    this.password = await hash(this.password, salt);
     next();
-  } catch (e: any) {
-    next(e);
+  } catch (e) {
+    next(e as CallbackError);
   }
 });
 
-export const User = model<IUser, any>('User', userSchema, 'users');
+export const User = model<IUser, Model<IUser>>('User', userSchema, 'users');

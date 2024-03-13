@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Model, Schema, model } from 'mongoose';
 import { ICurrency } from 'database/types/currency.type';
 
 const currencySchema = new Schema(
@@ -28,4 +28,4 @@ const currencySchema = new Schema(
   { timestamps: false },
 );
 
-export const Currency = model<ICurrency, any>('Currencies', currencySchema);
+export const Currency = model<ICurrency, Model<ICurrency>>('Currency', currencySchema, 'currencies');
