@@ -1,5 +1,5 @@
 import { Model, Schema, model } from 'mongoose';
-import { ILanguage } from 'database/types/language.type';
+import { ILanguage } from '../types/language.type';
 
 const languageSchema = new Schema(
   {

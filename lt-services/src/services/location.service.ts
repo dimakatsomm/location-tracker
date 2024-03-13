@@ -1,9 +1,9 @@
 import { Service } from 'typedi';
 import NodeGeocoder from 'node-geocoder';
 import * as C from '../constants';
-import { ICoordinates } from 'interfaces/location.interface';
+import { ICoordinates } from '../interfaces/location.interface';
 import { Location } from '../database/models/location.model';
-import { ILocation } from 'database/types/location.type';
+import { ILocation } from '../database/types/location.type';
 
 const options: NodeGeocoder.Options = {
   provider: 'opencage',

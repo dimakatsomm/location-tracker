@@ -1,13 +1,12 @@
 import { randomUUID } from 'crypto';
 import { Model, Schema, model } from 'mongoose';
-import { ILocation } from 'database/types/location.type';
+import { ILocation } from '../types/location.type';
 
 const locationSchema = new Schema(
   {
     _id: {
       type: Schema.Types.UUID,
       required: true,
-      unique: true,
       default: randomUUID,
     },
     userId: {

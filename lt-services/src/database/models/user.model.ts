@@ -1,16 +1,15 @@
 import { randomUUID } from 'crypto';
 import { CallbackError, Model, Schema, model } from 'mongoose';
-import { IUser } from 'database/types/user.type';
+import { isEmail } from 'validator';
 import { genSalt, hash } from 'bcrypt';
 import * as C from '../../constants';
-import { isEmail } from 'validator';
+import { IUser } from '../types/user.type';
 
 const userSchema = new Schema(
   {
     _id: {
       type: Schema.Types.UUID,
       required: true,
-      unique: true,
       default: randomUUID,
     },
     firstName: {

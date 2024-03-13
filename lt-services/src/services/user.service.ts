@@ -1,7 +1,7 @@
-import { User } from 'database/models/user.model';
-import { IUser } from 'database/types/user.type';
-import { IAppUser, ILoginUser, INewUser } from 'interfaces/user.interface';
 import { Service } from 'typedi';
+import { User } from '../database/models/user.model';
+import { IUser } from '../database/types/user.type';
+import { IAppUser, ICredentials, INewUser } from '../interfaces/user.interface';
 
 @Service()
 export class UserService {
@@ -17,10 +17,10 @@ export class UserService {
 
   /**
    * @method getUserWithUsernameOrEmail
-   * @param {ILoginUser} user
+   * @param {ICredentials} user
    * @returns {Promise<IUser>}
    */
-  getUserWithUsernameOrEmail(user: ILoginUser): Promise<IUser | null> {
+  getUserWithUsernameOrEmail(user: ICredentials): Promise<IUser | null> {
     return User.findOne({ $or: [{ username: user.username }, { emailAddress: user.emailAddress }] });
   }
 

@@ -1,9 +1,9 @@
-import { ILocation } from 'database/types/location.type';
 import { Request, Response } from 'express';
-import { ICoordinates } from 'interfaces/location.interface';
-import { LocationService } from 'services/location.service';
-import { UserService } from 'services/user.service';
 import { Inject, Service } from 'typedi';
+import { ILocation } from '../database/types/location.type';
+import { ICoordinates } from '../interfaces/location.interface';
+import { LocationService } from '../services/location.service';
+import { UserService } from '../services/user.service';
 
 @Service()
 export class LocationController {

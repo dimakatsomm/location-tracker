@@ -6,7 +6,7 @@ export interface INewUser {
   password: string;
 }
 
-export interface ILoginUser {
+export interface ICredentials {
   username?: string;
   emailAddress?: string;
   password: string;

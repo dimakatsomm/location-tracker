@@ -1,5 +1,5 @@
 import { Model, Schema, model } from 'mongoose';
-import { ICountry } from 'database/types/country.type';
+import { ICountry } from '../types/country.type';
 
 const countrySchema = new Schema(
   {

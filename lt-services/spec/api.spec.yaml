@@ -5,6 +5,11 @@ info:
   contact:
     name: Dimakatso
     email: dimakatsomm@icloud.com
+servers:
+  - url: /
+    description: Self
+  - url: http://localhost:5000
+    description: local
 tags:
   - name: auth
     description: User authentication service
