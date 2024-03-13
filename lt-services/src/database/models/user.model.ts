@@ -53,7 +53,7 @@ const userSchema = new Schema(
     toJSON: {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       transform: function (doc, ret) {
-        ret.id = ret._id.toString();
+        ret.id = doc._id;
         delete ret._id;
         delete ret.__v;
       },

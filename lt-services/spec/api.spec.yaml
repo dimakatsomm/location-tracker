@@ -82,6 +82,10 @@ paths:
       responses:
         '201':
           description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessDto'
         '409':
           description: Conflicted
           content:
@@ -95,9 +99,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorDto'
   /auth/verify:
-    post:
-      security:
-        - bearerAuth: []
+    get:
       tags:
         - auth
       summary: User verification
@@ -109,6 +111,7 @@ paths:
           schema:
             type: string
           description: The token to verify user
+          required: true
       responses:
         '208':
           description: Already reported
@@ -118,8 +121,65 @@ paths:
                 $ref: '#/components/schemas/SuccessDto'
         '302':
           description: Redirect
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
         '409':
           description: Conflicted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        '500':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+  /auth/resend-verification:
+    post:
+      tags:
+        - auth
+      summary: User re-verification
+      description: Resends user verification email
+      operationId: resendVerification
+      parameters:
+        - in: query
+          name: email
+          schema:
+            type: string
+          description: The token to verify user
+          required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessDto'
+        '208':
+          description: Already reported
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessDto'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        '404':
+          description: Not found
           content:
             application/json:
               schema:
@@ -291,5 +351,7 @@ components:
           type: object
           properties:
             message:
+              type: string
+            error:
               type: string
               

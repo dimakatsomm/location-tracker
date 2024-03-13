@@ -34,6 +34,15 @@ export class UserService {
   }
 
   /**
+   * @method checkIfUserExistsByEmail
+   * @param {string} email
+   * @returns {Promise<IUser>}
+   */
+  checkIfUserExistsByEmail(email: string): Promise<IUser | null> {
+    return User.findOne({ emailAddress: email });
+  }
+
+  /**
    * @method validateUser
    * @param {string} userId
    * @param {string} emailAddress

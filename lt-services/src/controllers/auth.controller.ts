@@ -36,13 +36,14 @@ export class AuthController {
 
       const user: IAppUser = await this.userService.register(newUser);
 
-      const token = sign({ userId: user.id }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_VERIFY_EXPIRES_IN });
+      const token = sign({ userId: user.id, email: user.emailAddress }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_VERIFY_EXPIRES_IN });
       await this.notificationService.sendVerificationEmail(user, token);
 
       return res.status(201).json({ status: true, data: { message: `Account verification link has been sent.` } });
-    } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
       console.error(e);
-      return res.status(500).json({ status: false, data: e });
+      return res.status(500).json({ status: false, data: { message: e.data?.message || e.message, error: e } });
     }
   };
 
@@ -66,10 +67,40 @@ export class AuthController {
 
       await this.userService.verifyUserAccount(user.id);
 
-      return res.status(300).redirect(`${C.APP_LINK}/verified`);
-    } catch (e) {
+      return res.status(302).redirect(`${C.APP_LINK}/verified`);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
       console.error(e);
-      return res.status(500).json({ status: false, data: e });
+      return res.status(500).json({ status: false, data: { message: e.data?.message || e.message, error: e } });
+    }
+  };
+
+  /**
+   * @method resendVerification
+   * @instance
+   * @async
+   * @param {Request} req
+   * @param {Response} res
+   */
+  resendVerification = async (req: Request, res: Response) => {
+    try {
+      const user = await this.userService.checkIfUserExistsByEmail((req.query.email as string) || '');
+      if (!user) {
+        return res.status(404).json({ status: false, data: { message: `User does not exist.` } });
+      }
+
+      if (user.verified) {
+        return res.status(208).json({ status: true, data: { message: `User already verified. Please login.` } });
+      }
+
+      const token = sign({ userId: user.id, email: user.emailAddress }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_VERIFY_EXPIRES_IN });
+      await this.notificationService.sendVerificationEmail(user, token);
+
+      return res.status(200).json({ status: true, data: { message: `Account verification link has been sent.` } });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      console.error(e);
+      return res.status(500).json({ status: false, data: { message: e.data?.message || e.message, error: e } });
     }
   };
 
@@ -99,9 +130,10 @@ export class AuthController {
       const token = sign({ userId: user.id }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_LOGIN_EXPIRES_IN });
 
       return res.status(200).json({ status: true, data: { user, token } });
-    } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
       console.error(e);
-      return res.status(500).json({ status: false, data: e });
+      return res.status(500).json({ status: false, data: { message: e.data?.message || e.message, error: e } });
     }
   };
 }

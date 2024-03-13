@@ -52,8 +52,8 @@ const locationSchema = new Schema(
     toJSON: {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       transform: function (doc, ret) {
-        ret.id = ret._id.toString();
-        ret.userId = ret._userId.toString();
+        ret.id = doc._id;
+        ret.userId = doc._userId;
         delete ret._id;
         delete ret._userId;
         delete ret.__v;

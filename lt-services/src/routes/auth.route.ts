@@ -8,6 +8,7 @@ const controller = Container.get(AuthController);
 
 router.post('/register', controller.register);
 router.post('/login', controller.login);
-router.post('/verify', validateUser(), controller.verify);
+router.get('/verify', validateUser(), controller.verify);
+router.post('/resend-verification', controller.resendVerification);
 
 export default router;

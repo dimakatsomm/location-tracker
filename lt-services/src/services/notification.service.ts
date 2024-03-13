@@ -35,5 +35,4 @@ export class NotificationService {
       throw new Error('Email sending failed');
     }
   }
-  }
 }
