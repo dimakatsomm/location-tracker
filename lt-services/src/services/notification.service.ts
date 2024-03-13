@@ -31,4 +31,22 @@ export class NotificationService {
 
     await trasporter.sendMail(mailOptions);
   }
+
+  /**
+   * @method sendForgotPasswordEmail
+   * @async
+   * @param {IUser} user
+   * @param {string} token
+   * @returns {Promise<void>}
+   */
+  async sendForgotPasswordEmail(user: IAppUser, token: string): Promise<void> {
+    const mailOptions = {
+      from: C.SMTP_LOGIN,
+      to: user.emailAddress,
+      subject: 'Reset Password for Location Tracker',
+      text: `Hello ${user.firstName} ${user.lastName}\n\n Please reset your password by clicking the link: ${C.APP_LINK}/forgot-password/?token=${token}\n\nThank you!\nLocation Tracker`,
+    };
+
+    await trasporter.sendMail(mailOptions);
+  }
 }
