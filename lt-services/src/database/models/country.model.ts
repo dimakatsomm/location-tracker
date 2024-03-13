@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Model, Schema, model } from 'mongoose';
 import { ICountry } from 'database/types/country.type';
 
 const countrySchema = new Schema(
@@ -65,4 +65,4 @@ const countrySchema = new Schema(
   { timestamps: false },
 );
 
-export const Country = model<ICountry, any>('Countries', countrySchema);
+export const Country: Model<ICountry> = model<ICountry>('Country', countrySchema, 'countries');

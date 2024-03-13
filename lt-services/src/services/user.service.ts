@@ -12,7 +12,7 @@ export class UserService {
    * @returns {Promise<IUser>}
    */
   async register(newUser: INewUser): Promise<IAppUser> {
-    return User.create(newUser) as IAppUser;
+    return (await User.create(newUser)) as IAppUser;
   }
 
   /**
@@ -20,7 +20,7 @@ export class UserService {
    * @param {ILoginUser} user
    * @returns {Promise<IUser>}
    */
-  getUserWithUsernameOrEmail(user: ILoginUser): Promise<IUser> {
+  getUserWithUsernameOrEmail(user: ILoginUser): Promise<IUser | null> {
     return User.findOne({ $or: [{ username: user.username }, { emailAddress: user.emailAddress }] });
   }
 
@@ -29,7 +29,7 @@ export class UserService {
    * @param {string} userId
    * @returns {Promise<IUser>}
    */
-  async checkIfUserExists(userId: string): Promise<IUser> {
+  checkIfUserExists(userId: string): Promise<IUser | null> {
     return User.findOne({ id: userId });
   }
 }

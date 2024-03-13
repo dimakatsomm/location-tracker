@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Model, Schema, model } from 'mongoose';
 import { ILanguage } from 'database/types/language.type';
 
 const languageSchema = new Schema(
@@ -21,4 +21,4 @@ const languageSchema = new Schema(
   { timestamps: false },
 );
 
-export const Language = model<ILanguage, any>('Languages', languageSchema);
+export const Language: Model<ILanguage> = model<ILanguage>('Language', languageSchema, 'languages');

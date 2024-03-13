@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto';
-import { Schema, model } from 'mongoose';
+import { Model, Schema, model } from 'mongoose';
 import { ILocation } from 'database/types/location.type';
 
 const locationSchema = new Schema(
@@ -13,6 +13,7 @@ const locationSchema = new Schema(
     userId: {
       type: Schema.Types.UUID,
       required: true,
+      ref: 'User',
     },
     latitude: {
       type: Number,
@@ -52,4 +53,4 @@ const locationSchema = new Schema(
 
 locationSchema.index({ latitude: 1, longitude: 1 }, { unique: false });
 
-export const Location = model<ILocation, any>('Location', locationSchema, 'locations');
+export const Location: Model<ILocation> = model<ILocation>('Location', locationSchema, 'locations');

@@ -1,5 +1,4 @@
 import { ILocation } from 'database/types/location.type';
-import { IUser } from 'database/types/user.type';
 import { Response } from 'express';
 import { IUserRequest } from 'interfaces/auth.interface';
 import { ICoordinates } from 'interfaces/location.interface';
@@ -24,7 +23,7 @@ export class LocationController {
    */
   saveLocation = async (req: IUserRequest, res: Response) => {
     try {
-      const user: IUser = await this.userService.checkIfUserExists(req.auth.userId);
+      const user = await this.userService.checkIfUserExists(req.auth.userId);
       if (!user) {
         return res.status(404).json({ status: false, data: { message: `User does not exist.` } });
       }
@@ -48,7 +47,7 @@ export class LocationController {
    */
   locationHistory = async (req: IUserRequest, res: Response) => {
     try {
-      const user: IUser = await this.userService.checkIfUserExists(req.auth.userId);
+      const user = await this.userService.checkIfUserExists(req.auth.userId);
       if (!user) {
         return res.status(404).json({ status: false, data: { message: `User does not exist.` } });
       }

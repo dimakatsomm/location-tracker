@@ -1,5 +1,4 @@
 import { compare } from 'bcrypt';
-import { IUser } from 'database/types/user.type';
 import { Request, Response } from 'express';
 import { IAppUser, ILoginUser, INewUser } from 'interfaces/user.interface';
 import { sign } from 'jsonwebtoken';
@@ -55,7 +54,7 @@ export class UserController {
       if (!loginUser?.username && !loginUser?.emailAddress) {
         return res.status(404).json({ status: false, data: { message: `No username or email provided for login.` } });
       }
-      const user: IUser = await this.userService.getUserWithUsernameOrEmail(loginUser);
+      const user = await this.userService.getUserWithUsernameOrEmail(loginUser);
       if (!user) {
         return res.status(400).json({ status: false, data: { message: `User login details provided are incorrect.` } });
       }
