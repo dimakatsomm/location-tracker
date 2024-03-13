@@ -110,24 +110,14 @@ paths:
             type: string
           description: The token to verify user
       responses:
-        '200':
-          description: Successful operation
+        '208':
+          description: Already reported
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: boolean
-                    default: true
-                  data:
-                    type: object
-                    properties:
-                      user:
-                        $ref: '#/components/schemas/AppUser'
-                      token:
-                        type: string
-                        format: jwt
+                $ref: '#/components/schemas/SuccessDto'
+        '302':
+          description: Redirect
         '409':
           description: Conflicted
           content:
@@ -280,6 +270,17 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/Location'
+    SuccessDto:
+      type: object
+      properties:
+        status:
+          type: boolean
+          default: true
+        data:
+          type: object
+          properties:
+            message:
+              type: string
     ErrorDto:
       type: object
       properties:
