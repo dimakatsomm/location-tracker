@@ -10,5 +10,5 @@ export const handleError = (res: Response, e: any) => {
     errorCode: e.errorCode || '',
   };
 
-  return res.status(e.statusCode || 500).json({ status: false, data: sanitisedError });
+  return res.status(e.statusCode || e.status || 500).json({ status: false, data: sanitisedError });
 };

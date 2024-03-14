@@ -3,7 +3,7 @@ import { TransportOptions, createTransport } from 'nodemailer';
 
 import * as C from '../constants';
 import { IAppUser, IVerifyUser } from 'interfaces/user.interface';
-import { logError } from 'utils/logger.utils';
+import { logError } from '../utils/logger.utils';
 
 const trasporter = createTransport({
   host: C.SMTP_SERVER,
@@ -48,7 +48,7 @@ export class NotificationService {
    * @returns {Promise<void>}
    */
   async sendVerificationEmail(user: IVerifyUser, token: string): Promise<void> {
-    const text = `Hello ${user.firstName} ${user.lastName}\n\n Please verify your account by clicking the link: ${C.SERVER_LINK}/?token=${token}\n\nThank you!\nLocation Tracker`;
+    const text = `Hello ${user.firstName} ${user.lastName}\n\n Please verify your account by clicking the link: ${C.SERVER_URI}/?token=${token}\n\nThank you!\nLocation Tracker`;
     await this.sendEmail(user.emailAddress, 'Account Verification for Location Tracker', text);
   }
 
@@ -60,7 +60,7 @@ export class NotificationService {
    * @returns {Promise<void>}
    */
   async sendForgotPasswordEmail(user: IAppUser, token: string): Promise<void> {
-    const text = `Hello ${user.firstName} ${user.lastName}\n\n Please reset your password by clicking the link: ${C.APP_LINK}/forgot-password/?t=${token}\n\nThank you!\nLocation Tracker`;
+    const text = `Hello ${user.firstName} ${user.lastName}\n\n Please reset your password by clicking the link: ${C.APP_URI}/forgot-password/?t=${token}\n\nThank you!\nLocation Tracker`;
     await this.sendEmail(user.emailAddress, 'Reset Password for Location Tracker', text);
   }
 }
