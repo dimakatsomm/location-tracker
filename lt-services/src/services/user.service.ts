@@ -14,7 +14,7 @@ export class UserService {
    * @returns {Promise<IVerifyUser>}
    */
   async register(newUser: INewUser): Promise<IVerifyUser> {
-    const user = (await User.create(newUser))
+    const user = await User.create(newUser);
     await this.updatePassword(user.id, newUser.password);
     return user as IVerifyUser;
   }

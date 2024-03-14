@@ -7,6 +7,8 @@ import { UserService } from '../services/user.service';
 import * as C from '../constants';
 import { NotificationService } from '../services/notification.service';
 import { mapUserToAppUser } from '../mappers/auth.mapper';
+import { redisClient } from '../index';
+import { toSeconds } from '../utils/time.utils';
 
 @Service()
 export class AuthController {
@@ -38,7 +40,12 @@ export class AuthController {
       const user: IVerifyUser = await this.userService.register(newUser);
 
       const token = sign({ userId: user.id, email: user.emailAddress }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_VERIFY_EXPIRES_IN });
-      await this.notificationService.sendVerificationEmail(user, token);
+      await Promise.all([
+        redisClient.set(`verification:user:${user.id}`, token),
+        redisClient.expire(`verification:user:${user.id}`, toSeconds(C.JWT_VERIFY_EXPIRES_IN)),
+        this.notificationService.sendVerificationEmail(user, token),
+      ]);
+      redisClient;
 
       return res.status(201).json({ status: true, data: { message: `Account verification link has been sent.` } });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -68,7 +75,7 @@ export class AuthController {
 
       await this.userService.verifyUserAccount(user.id);
 
-      return res.status(302).redirect(`${C.APP_LINK}/verified`);
+      return res.status(302).redirect(`${C.APP_URI}/verified`);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       console.error(e);
@@ -95,7 +102,11 @@ export class AuthController {
       }
 
       const token = sign({ userId: user.id, email: user.emailAddress }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_VERIFY_EXPIRES_IN });
-      await this.notificationService.sendVerificationEmail(user, token);
+      await Promise.all([
+        redisClient.set(`verification:user:${user.id}`, token),
+        redisClient.expire(`verification:user:${user.id}`, toSeconds(C.JWT_VERIFY_EXPIRES_IN)),
+        this.notificationService.sendVerificationEmail(user, token),
+      ]);
 
       return res.status(200).json({ status: true, data: { message: `Account verification link has been sent.` } });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -129,6 +140,10 @@ export class AuthController {
       }
 
       const token = sign({ userId: user.id }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_LOGIN_EXPIRES_IN });
+      await Promise.all([
+        redisClient.set(`session:user:${user.id}`, token),
+        redisClient.expire(`session:user:${user.id}`, toSeconds(C.JWT_LOGIN_EXPIRES_IN)),
+      ]);
 
       return res.status(200).json({ status: true, data: { user: mapUserToAppUser(user), token } });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -157,8 +172,11 @@ export class AuthController {
       }
 
       const token = sign({ userId: user.id, email: user.emailAddress }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_FORGOT_PASSWORD_EXPIRES_IN });
-
-      await this.notificationService.sendForgotPasswordEmail(user, token);
+      await Promise.all([
+        redisClient.set(`verification:user:${user.id}`, token),
+        redisClient.expire(`verification:user:${user.id}`, toSeconds(C.JWT_FORGOT_PASSWORD_EXPIRES_IN)),
+        this.notificationService.sendForgotPasswordEmail(user, token),
+      ]);
 
       return res.status(200).json({ status: true, data: { message: `Password reset link has been sent.` } });
     } catch (e) {
@@ -187,7 +205,25 @@ export class AuthController {
 
       await this.userService.updatePassword(user.id, req.body.password);
 
-      return res.status(302).redirect(`${C.APP_LINK}/login`);
+      return res.status(302).redirect(`${C.APP_URI}/login`);
+    } catch (e) {
+      console.error(e);
+      return res.status(500).json({ status: false, data: e });
+    }
+  };
+
+  /**
+   * @method logout
+   * @instance
+   * @async
+   * @param {Request} req
+   * @param {Response} res
+   */
+  logout = async (req: Request, res: Response) => {
+    try {
+      await redisClient.del(`session:user:${req.auth.userId}`);
+
+      return res.status(302).redirect(`${C.APP_URI}/login`);
     } catch (e) {
       console.error(e);
       return res.status(500).json({ status: false, data: e });

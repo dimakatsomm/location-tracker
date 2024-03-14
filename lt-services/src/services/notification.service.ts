@@ -26,7 +26,7 @@ export class NotificationService {
       from: `Location Tracker <${C.SMTP_LOGIN}>`,
       to: user.emailAddress,
       subject: 'Account Verification for Location Tracker',
-      text: `Hello ${user.firstName} ${user.lastName}\n\n Please verify your account by clicking the link: ${C.SERVER_LINK}/?token=${token}\n\nThank you!\nLocation Tracker`,
+      text: `Hello ${user.firstName} ${user.lastName}\n\n Please verify your account by clicking the link: ${C.SERVER_URI}/?token=${token}\n\nThank you!\nLocation Tracker`,
     };
     try {
       await trasporter.sendMail(mailOptions);
@@ -48,7 +48,7 @@ export class NotificationService {
       from: `Location Tracker <${C.SMTP_LOGIN}>`,
       to: user.emailAddress,
       subject: 'Reset Password for Location Tracker',
-      text: `Hello ${user.firstName} ${user.lastName}\n\n Please reset your password by clicking the link: ${C.APP_LINK}/forgot-password/?t=${token}\n\nThank you!\nLocation Tracker`,
+      text: `Hello ${user.firstName} ${user.lastName}\n\n Please reset your password by clicking the link: ${C.APP_URI}/forgot-password/?t=${token}\n\nThank you!\nLocation Tracker`,
     };
 
     await trasporter.sendMail(mailOptions);
