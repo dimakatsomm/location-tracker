@@ -6,5 +6,6 @@ export const toSeconds = (timeExpr: string): number => {
     ['s', 1],
   ]);
   const formattedTime = timeExpr.toLowerCase().matchAll(/(\d+)([dhms])/gim);
-  return [...formattedTime].reduce<number>((t = 0, [, v, u]) => timePeriod.get(u) || 0 * parseInt(v) + t, 0);
+
+  return [...formattedTime].reduce<number>((t, [, v, u]) => t + (timePeriod.get(u) || 0) * parseInt(v), 0);
 };
