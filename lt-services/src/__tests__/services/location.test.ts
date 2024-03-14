@@ -12,7 +12,7 @@ jest.mock('node-geocoder', () => {
   return jest.fn(() => mockGeocoder);
 });
 
-jest.mock('../database/models/location.model', () => {
+jest.mock('../../database/models/location.model', () => {
   return {
     Location: mockLocationModel,
   };
@@ -68,6 +68,13 @@ describe('LocationService', () => {
       expect(mockLocationModel.create).toHaveBeenCalledWith(expectedLocation);
     });
 
+    // Example test for error handling in reverseGeocode
+    it('should handle errors gracefully', async () => {
+      const coordinates = { lat: 1, lon: 2 };
+      mockGeocoder.reverse.mockRejectedValue(new Error('Geocoding failed'));
+      await expect(service.reverseGeocode(coordinates, 'testUserId')).rejects.toThrow('Geocoding failed');
+    });
+
     // Additional tests for error handling and no location found scenarios can be added here.
   });
 
@@ -91,6 +98,14 @@ describe('LocationService', () => {
 
       expect(result).toEqual(expectedLocations);
       expect(mockLocationModel.find).toHaveBeenCalledWith({ userId });
+    });
+
+    // Example test for no location found in listLocationHistory
+    it('should return an empty array if no locations are found', async () => {
+      const userId = 'testUserId';
+      mockLocationModel.find.mockResolvedValue([]);
+      const result = await service.listLocationHistory(userId);
+      expect(result).toEqual([]);
     });
   });
 });

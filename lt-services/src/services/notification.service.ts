@@ -34,9 +34,9 @@ export class NotificationService {
     };
     try {
       await trasporter.sendMail(mailOptions);
-    } catch (e) {
+    } catch (e: any) {
       logError(e);
-      throw new Error('Email sending failed');
+      throw new Error(`Email sending failed: ${e.data?.message || e.message || ''}`);
     }
   }
 

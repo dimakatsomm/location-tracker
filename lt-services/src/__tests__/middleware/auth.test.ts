@@ -56,5 +56,13 @@ describe('Auth Middleware', () => {
     });
   });
 
-  // Similar tests for `validateUser` function can be added here.
+  // Example test for validateUser middleware
+  describe('validateUser', () => {
+    it('should call next if user is valid', () => {
+      // Setup request with valid user
+      // Call validateUser middleware
+      // Assert that nextFunction is called
+    });
+    // Add more tests for different scenarios...
+  });
 });

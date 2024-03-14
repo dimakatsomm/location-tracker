@@ -159,7 +159,8 @@ export class AuthController {
       await this.notificationService.sendForgotPasswordEmail(user, token);
 
       return res.status(200).json({ status: true, data: { message: `Password reset link has been sent.` } });
-    } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
       handleError(res, e);
     }
   };
@@ -185,7 +186,8 @@ export class AuthController {
       await this.userService.updatePassword(user.id, req.body.password);
 
       return res.status(302).redirect(`${C.APP_LINK}/login`);
-    } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
       handleError(res, e);
     }
   };

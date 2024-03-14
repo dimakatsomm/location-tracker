@@ -43,6 +43,13 @@ describe('NotificationService', () => {
 
       await expect(notificationService.sendVerificationEmail(user, token)).rejects.toThrow('Email sending failed');
     });
+
+    // Example test for invalid email address
+    it('should throw an error if email address is invalid', async () => {
+      // Setup user with invalid email address
+      // Call sendVerificationEmail or sendForgotPasswordEmail
+      // Assert that an appropriate error is thrown
+    });
   });
 
   describe('sendForgotPasswordEmail', () => {
@@ -67,6 +74,13 @@ describe('NotificationService', () => {
       const token = 'reset-token';
 
       await expect(notificationService.sendForgotPasswordEmail(user, token)).rejects.toThrow('Email sending failed');
+    });
+
+    // Example test for invalid email address
+    it('should throw an error if email address is invalid', async () => {
+      // Setup user with invalid email address
+      // Call sendVerificationEmail or sendForgotPasswordEmail
+      // Assert that an appropriate error is thrown
     });
   });
 });

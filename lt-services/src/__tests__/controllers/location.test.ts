@@ -38,7 +38,17 @@ describe('LocationController', () => {
       expect(responseJson).toHaveBeenCalledWith({ status: false, data: { message: `User does not exist.` } });
     });
 
-    // Add more tests for different scenarios, including successful save and error handling
+    // Filled test case for successful location save
+    it('should return 200 and location data if save is successful', async () => {
+      jest.spyOn(userService, 'checkIfUserExists').mockResolvedValueOnce(true);
+      const mockLocationData = { lat: 123, lon: 456 };
+      jest.spyOn(locationService, 'saveLocation').mockResolvedValueOnce(mockLocationData);
+
+      await locationController.saveLocation(mockRequest as Request, mockResponse as Response);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(responseJson).toHaveBeenCalledWith({ status: true, data: mockLocationData });
+    });
   });
 
   describe('locationHistory', () => {
@@ -51,6 +61,16 @@ describe('LocationController', () => {
       expect(responseJson).toHaveBeenCalledWith({ status: false, data: { message: `User does not exist.` } });
     });
 
-    // Add more tests for different scenarios, including successful listing and error handling
+    // Filled test case for error handling in locationHistory
+    it('should return 500 if an unexpected error occurs', async () => {
+      jest.spyOn(locationService, 'getLocationHistory').mockImplementationOnce(() => {
+        throw new Error('Unexpected error');
+      });
+
+      await locationController.locationHistory(mockRequest as Request, mockResponse as Response);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
+      expect(responseJson).toHaveBeenCalledWith({ status: false, data: { message: `An unexpected error occurred.` } });
+    });
   });
 });

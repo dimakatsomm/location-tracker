@@ -37,5 +37,5 @@ export const logInfo = (e: any) => {
 };
 
 export const logWarn = (e: any) => {
-  logger.info(e);
+  logger.warn(e);
 };

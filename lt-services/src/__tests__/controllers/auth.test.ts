@@ -45,6 +45,33 @@ describe('AuthController', () => {
       expect(res.json).toHaveBeenCalledWith({ status: false, data: { message: `Username or email address is already in use.` } });
     });
 
+    // Example test for successful registration
+    it('should return 201 and user data if registration is successful', async () => {
+      // Setup request and mock service behavior
+      req = {
+        body: { username: 'newUser', emailAddress: 'new@example.com', password: 'newPassword123' },
+      };
+      mockedUserService.createUser.mockResolvedValueOnce({ id: '123', username: 'newUser' }); // Simulate successful registration
+
+      await controller.register(req as Request, res);
+
+      expect(res.status).toHaveBeenCalledWith(201);
+      expect(res.json).toHaveBeenCalledWith({ status: true, data: { id: '123', username: 'newUser' } });
+    });
+
+    // Example test for error handling
+    it('should return 500 if an unexpected error occurs', async () => {
+      // Setup request and mock service to throw an exception
+      req = {
+        body: { username: 'errorUser', emailAddress: 'error@example.com', password: 'errorPassword123' },
+      };
+      mockedUserService.createUser.mockRejectedValueOnce(new Error('Unexpected error')); // Simulate unexpected error
+
+      await controller.register(req as Request, res);
+
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({ status: false, data: { message: `An unexpected error occurred.` } });
+    });
     // Add more tests here for different scenarios...
   });
 
