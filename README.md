@@ -1,4 +1,4 @@
-### Class Diagram (Mermaid)
+# Class Diagram (Mermaid)
 
 ```mermaid
 classDiagram
