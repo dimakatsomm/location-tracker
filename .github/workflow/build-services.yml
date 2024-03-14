@@ -36,5 +36,7 @@ jobs:
           npm install && rm -f $HOME/.npmrc
       - name: Run Lint
         run: npm run lint
-      #- name: Run Test
-       # run: npm test
+      - name: Run Build
+        run: npm run build
+      - name: Run Test
+        run: npm run test

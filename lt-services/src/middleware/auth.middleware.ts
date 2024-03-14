@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { JwtPayload, verify } from 'jsonwebtoken';
 import { isJWT } from 'validator';
+
 import * as C from '../constants';
-import { redisClient } from 'index';
+import { redisClient } from '../index';
+import { logError } from '../utils/logger.utils';
 
 export const validateUserToken = () => async (req: Request, res: Response, next: NextFunction) => {
   const token = req.headers.authorization;
@@ -25,7 +27,7 @@ export const validateUserToken = () => async (req: Request, res: Response, next:
 
     req.auth = { userId: decodedToken.userId };
   } catch (e) {
-    console.error(e);
+    logError(e);
     return res.status(401).json({ status: false, data: { message: 'Invalid user token. Access denied.', error: e } });
   }
   next();
@@ -51,7 +53,7 @@ export const validateUser = () => async (req: Request, res: Response, next: Next
 
     req.auth = { userId: decodedToken.userId, email: decodedToken.email };
   } catch (e) {
-    console.error(e);
+    logError(e);
     return res.status(401).json({ status: false, data: { message: 'Invalid user token. Access denied.', error: e } });
   }
   next();
