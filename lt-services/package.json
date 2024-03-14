@@ -10,8 +10,8 @@
     "build": "tsc",
     "watch:build": "tsc --watch",
     "watch:server": "nodemon '../dist/index.js' --watch '../dist'",
-    "lint": "eslint src/** --ext .ts",
-    "lint:fix": "eslint src/** --ext .ts --fix"
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix"
   },
   "keywords": [],
   "author": "",
