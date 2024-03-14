@@ -1,7 +1,7 @@
 import { Service } from 'typedi';
 import * as C from '../constants';
 import { IAppUser, IVerifyUser } from 'interfaces/user.interface';
-import { createTransport } from 'nodemailer';
+import { TransportOptions, createTransport } from 'nodemailer';
 
 const trasporter = createTransport({
   host: C.SMTP_SERVER,
@@ -10,7 +10,7 @@ const trasporter = createTransport({
     user: C.SMTP_LOGIN,
     pass: C.SMTP_KEY,
   },
-});
+} as TransportOptions);
 
 @Service()
 export class NotificationService {
