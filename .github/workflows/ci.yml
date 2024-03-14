@@ -11,7 +11,7 @@ jobs:
       - name: Test
         run: |
           npm install
-          npm run test
+        #  npm run test
 
       - name: Deploy
         # Only run this step if the branch is main

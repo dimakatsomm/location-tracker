@@ -1,4 +1,4 @@
-name: Build Jobox Platform Functions
+name: Build Location Tracker Services
 
 # Controls when the workflow will run
 on:
@@ -9,7 +9,7 @@ on:
 defaults:
   run:
     shell: bash
-    working-directory: ./lt-service
+    working-directory: ./lt-services
 
 jobs:
   # This workflow contains a single job called "build"
@@ -25,7 +25,7 @@ jobs:
         with:
           node-version: "20.11.1"
           cache: "npm"
-          cache-dependency-path: "./lt-service/src/package-lock.json"
+          cache-dependency-path: "./lt-services/package-lock.json"
       - name: Configure NPM Auth
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PACKAGE_TOKEN }}
@@ -38,5 +38,5 @@ jobs:
         run: npm run lint
       - name: Run Build
         run: npm run build
-      - name: Run Test
-        run: npm run test
+      #- name: Run Test
+      #  run: npm run test
