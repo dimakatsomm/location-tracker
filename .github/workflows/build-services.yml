@@ -9,7 +9,7 @@ on:
 defaults:
   run:
     shell: bash
-    working-directory: ./lt-service
+    working-directory: ./lt-services
 
 jobs:
   # This workflow contains a single job called "build"
