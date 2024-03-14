@@ -54,6 +54,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDto'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
         '403':
           description: Forbidden
           content:
@@ -86,6 +92,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessDto'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
         '409':
           description: Conflicted
           content:
@@ -121,8 +139,18 @@ paths:
                 $ref: '#/components/schemas/SuccessDto'
         '302':
           description: Redirect
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessDto'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        '403':
+          description: Forbidden
           content:
             application/json:
               schema:
@@ -179,6 +207,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDto'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
         '404':
           description: Not found
           content:
@@ -221,7 +255,17 @@ paths:
               schema:
                 $ref: '#/components/schemas/SuccessDto'
         '302':
-          description: Redirect
+          description: Redirect\
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessDto'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
         '403':
           description: Forbidden
           content:
@@ -262,6 +306,52 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessDto'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        '500':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+  /auth/logout:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - auth
+      summary: User logout
+      description: Logout user from session
+      operationId: userLogout
+      responses:
+        '302':
+          description: Redirect
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessDto'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
         '403':
           description: Forbidden
           content:
@@ -296,6 +386,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Locations'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
         '500':
           description: Invalid request
           content:
@@ -315,7 +417,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UserCoordinatesDto'
-        required: true
       responses:
         '201':
           description: Created
@@ -323,6 +424,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Location'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
         '404':
           description: Not found
           content:

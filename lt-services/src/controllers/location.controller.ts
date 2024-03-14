@@ -5,7 +5,7 @@ import { ILocation } from '../database/types/location.type';
 import { ICoordinates } from '../interfaces/location.interface';
 import { LocationService } from '../services/location.service';
 import { UserService } from '../services/user.service';
-import { handleError } from 'utils/error.utils';
+import { handleError } from '../utils/error.utils';
 
 @Service()
 export class LocationController {
