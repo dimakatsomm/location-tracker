@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { Inject, Service } from 'typedi';
+
 import { ILocation } from '../database/types/location.type';
 import { ICoordinates } from '../interfaces/location.interface';
 import { LocationService } from '../services/location.service';

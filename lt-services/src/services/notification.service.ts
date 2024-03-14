@@ -1,7 +1,8 @@
 import { Service } from 'typedi';
+import { TransportOptions, createTransport } from 'nodemailer';
+
 import * as C from '../constants';
 import { IAppUser, IVerifyUser } from 'interfaces/user.interface';
-import { TransportOptions, createTransport } from 'nodemailer';
 
 const trasporter = createTransport({
   host: C.SMTP_SERVER,

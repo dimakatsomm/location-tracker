@@ -2,9 +2,10 @@ import { compare } from 'bcrypt';
 import { Request, Response } from 'express';
 import { Inject, Service } from 'typedi';
 import { sign } from 'jsonwebtoken';
+
+import * as C from '../constants';
 import { ICredentials, INewUser, IVerifyUser } from '../interfaces/user.interface';
 import { UserService } from '../services/user.service';
-import * as C from '../constants';
 import { NotificationService } from '../services/notification.service';
 import { mapUserToAppUser } from '../mappers/auth.mapper';
 

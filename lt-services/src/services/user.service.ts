@@ -1,9 +1,10 @@
 import { Service } from 'typedi';
 import { genSalt, hashSync } from 'bcrypt';
+
+import * as C from '../constants';
 import { User } from '../database/models/user.model';
 import { IUser } from '../database/types/user.type';
 import { ICredentials, INewUser, IVerifyUser } from '../interfaces/user.interface';
-import * as C from '../constants';
 
 @Service()
 export class UserService {

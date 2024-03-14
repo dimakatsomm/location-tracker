@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { JwtPayload, verify } from 'jsonwebtoken';
 import { isJWT } from 'validator';
+
 import * as C from '../constants';
 
 export const validateUserToken = () => (req: Request, res: Response, next: NextFunction) => {
