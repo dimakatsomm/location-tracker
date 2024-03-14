@@ -1,10 +1,9 @@
 import { Service } from 'typedi';
-import { genSalt, hashSync } from 'bcrypt';
 
-import * as C from '../constants';
 import { User } from '../database/models/user.model';
 import { IUser } from '../database/types/user.type';
 import { ICredentials, INewUser, IVerifyUser } from '../interfaces/user.interface';
+import { hashPassword } from 'utils/auth.utils';
 
 @Service()
 export class UserService {
@@ -15,7 +14,7 @@ export class UserService {
    * @returns {Promise<IVerifyUser>}
    */
   async register(newUser: INewUser): Promise<IVerifyUser> {
-    const user = (await User.create(newUser))
+    const user = await User.create(newUser);
     await this.updatePassword(user.id, newUser.password);
     return user as IVerifyUser;
   }
@@ -75,8 +74,7 @@ export class UserService {
    * @returns {Promise<void>}
    */
   async updatePassword(userId: string, password: string): Promise<void> {
-    const salt = await genSalt(C.SALT_WORK_FACTOR);
-    const hashedPassword = await hashSync(password, salt);
+    const hashedPassword = await hashPassword(password);
     await User.updateOne({ _id: userId }, { password: hashedPassword });
   }
 }

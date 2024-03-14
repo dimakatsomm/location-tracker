@@ -1,13 +1,14 @@
 import { compare } from 'bcrypt';
 import { Request, Response } from 'express';
 import { Inject, Service } from 'typedi';
-import { sign } from 'jsonwebtoken';
 
 import * as C from '../constants';
 import { ICredentials, INewUser, IVerifyUser } from '../interfaces/user.interface';
 import { UserService } from '../services/user.service';
 import { NotificationService } from '../services/notification.service';
 import { mapUserToAppUser } from '../mappers/auth.mapper';
+import { handleError } from 'utils/error.utils';
+import { generateJwtToken } from 'utils/auth.utils';
 
 @Service()
 export class AuthController {
@@ -38,14 +39,13 @@ export class AuthController {
 
       const user: IVerifyUser = await this.userService.register(newUser);
 
-      const token = sign({ userId: user.id, email: user.emailAddress }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_VERIFY_EXPIRES_IN });
+      const token = generateJwtToken({ userId: user.id, email: user.emailAddress }, C.JWT_VERIFY_EXPIRES_IN);
       await this.notificationService.sendVerificationEmail(user, token);
 
       return res.status(201).json({ status: true, data: { message: `Account verification link has been sent.` } });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
-      console.error(e);
-      return res.status(500).json({ status: false, data: { message: e.data?.message || e.message, error: e } });
+      handleError(res, e);
     }
   };
 
@@ -72,8 +72,7 @@ export class AuthController {
       return res.status(302).redirect(`${C.APP_LINK}/verified`);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
-      console.error(e);
-      return res.status(500).json({ status: false, data: { message: e.data?.message || e.message, error: e } });
+      handleError(res, e);
     }
   };
 
@@ -95,14 +94,13 @@ export class AuthController {
         return res.status(208).json({ status: true, data: { message: `User already verified. Please login.` } });
       }
 
-      const token = sign({ userId: user.id, email: user.emailAddress }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_VERIFY_EXPIRES_IN });
+      const token = generateJwtToken({ userId: user.id, email: user.emailAddress }, C.JWT_VERIFY_EXPIRES_IN);
       await this.notificationService.sendVerificationEmail(user, token);
 
       return res.status(200).json({ status: true, data: { message: `Account verification link has been sent.` } });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
-      console.error(e);
-      return res.status(500).json({ status: false, data: { message: e.data?.message || e.message, error: e } });
+      handleError(res, e);
     }
   };
 
@@ -129,13 +127,12 @@ export class AuthController {
         return res.status(403).json({ status: false, data: { message: `User login details provided are incorrect.` } });
       }
 
-      const token = sign({ userId: user.id }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_LOGIN_EXPIRES_IN });
+      const token = generateJwtToken({ userId: user.id }, C.JWT_LOGIN_EXPIRES_IN);
 
       return res.status(200).json({ status: true, data: { user: mapUserToAppUser(user), token } });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
-      console.error(e);
-      return res.status(500).json({ status: false, data: { message: e.data?.message || e.message, error: e } });
+      handleError(res, e);
     }
   };
 
@@ -157,7 +154,7 @@ export class AuthController {
         return res.status(403).json({ status: false, data: { message: `Account not verified. Please verify account.` } });
       }
 
-      const token = sign({ userId: user.id, email: user.emailAddress }, C.JWT_SECRET_KEY, { expiresIn: C.JWT_FORGOT_PASSWORD_EXPIRES_IN });
+      const token = generateJwtToken({ userId: user.id, email: user.emailAddress }, C.JWT_FORGOT_PASSWORD_EXPIRES_IN);
 
       await this.notificationService.sendForgotPasswordEmail(user, token);
 

@@ -25,21 +25,40 @@ export class LocationService {
    * @returns {Promise<void>}
    */
   async reverseGeocode(coordinates: ICoordinates, userId: string): Promise<ILocation> {
-    const location: NodeGeocoder.Entry[] = await geocoder.reverse(coordinates);
+    const location = await geocoder.reverse(coordinates);
+    this.validateLocation(location, coordinates);
+    return this.createLocationInstance(location[0], userId);
+  }
 
+  /**
+   * @method reverseGeocode
+   * @private
+   * @param {ICoordinates} coordinates
+   * @returns {Promise<void>}
+   */
+  private validateLocation(location: NodeGeocoder.Entry[], coordinates: ICoordinates): void {
     if (!location?.length) {
       throw new Error(`No location has been found with coordinates, latitude: ${coordinates.lat} and longitude: ${coordinates.lat}`);
     }
+  }
 
+  /**
+   * @method createLocationInstance
+   * @private
+   * @param {NodeGeocoder.Entry} locationData
+   * @param {string} userId
+   * @returns {ILocation}
+   */
+  private createLocationInstance(locationData: NodeGeocoder.Entry, userId: string): Promise<ILocation> {
     return Location.create({
       userId,
-      latitude: location[0].latitude,
-      longitude: location[0].longitude,
-      country: location[0].country,
-      countryCode: location[0].countryCode,
-      city: location[0].city,
-      zipCode: location[0].zipcode,
-      street: `${location[0].streetNumber} ${location[0].streetName}`,
+      latitude: locationData.latitude,
+      longitude: locationData.longitude,
+      country: locationData.country,
+      countryCode: locationData.countryCode,
+      city: locationData.city,
+      zipCode: locationData.zipcode,
+      street: `${locationData.streetNumber} ${locationData.streetName}`,
     });
   }
 

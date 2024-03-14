@@ -1,8 +1,6 @@
 import { randomUUID } from 'crypto';
-import { CallbackError, Model, Schema, model } from 'mongoose';
+import { Model, Schema, model } from 'mongoose';
 import { isEmail } from 'validator';
-import { genSalt, hash } from 'bcrypt';
-import * as C from '../../constants';
 import { IUser } from '../types/user.type';
 
 const userSchema = new Schema(
@@ -60,17 +58,5 @@ const userSchema = new Schema(
     },
   },
 );
-
-userSchema.pre(['save', 'findOneAndUpdate'], { document: true, query: false }, async function (next) {
-  console.log(this.isModified('password'));
-
-  try {
-    const salt = await genSalt(C.SALT_WORK_FACTOR);
-    const hashedPassword = await hash(this.password, salt);
-    next();
-  } catch (e) {
-    next(e as CallbackError);
-  }
-});
 
 export const User = model<IUser, Model<IUser>>('User', userSchema, 'users');
