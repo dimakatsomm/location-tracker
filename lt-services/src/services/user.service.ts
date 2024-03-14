@@ -3,7 +3,7 @@ import { Service } from 'typedi';
 import { User } from '../database/models/user.model';
 import { IUser } from '../database/types/user.type';
 import { ICredentials, INewUser, IVerifyUser } from '../interfaces/user.interface';
-import { hashPassword } from 'utils/auth.utils';
+import { hashPassword } from '../utils/auth.utils';
 
 @Service()
 export class UserService {

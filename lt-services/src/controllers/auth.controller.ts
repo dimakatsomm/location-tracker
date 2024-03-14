@@ -10,7 +10,7 @@ import { mapUserToAppUser } from '../mappers/auth.mapper';
 import { redisClient } from '../index';
 import { toSeconds } from '../utils/time.utils';
 import { handleError } from '../utils/error.utils';
-import { generateJwtToken } from '../utils/auth.utils';
+import { generateJwtToken, setTokenWithExpiration } from '../utils/auth.utils';
 
 @Service()
 export class AuthController {
@@ -43,8 +43,7 @@ export class AuthController {
 
       const token = generateJwtToken({ userId: user.id, email: user.emailAddress }, C.JWT_VERIFY_EXPIRES_IN);
       await Promise.all([
-        redisClient.set(`verification:user:${user.id}`, token),
-        redisClient.expire(`verification:user:${user.id}`, toSeconds(C.JWT_VERIFY_EXPIRES_IN)),
+        setTokenWithExpiration(`verification:user:${user.id}`, token, toSeconds(C.JWT_VERIFY_EXPIRES_IN)),
         this.notificationService.sendVerificationEmail(user, token),
       ]);
       redisClient;
@@ -103,8 +102,7 @@ export class AuthController {
 
       const token = generateJwtToken({ userId: user.id, email: user.emailAddress }, C.JWT_VERIFY_EXPIRES_IN);
       await Promise.all([
-        redisClient.set(`verification:user:${user.id}`, token),
-        redisClient.expire(`verification:user:${user.id}`, toSeconds(C.JWT_VERIFY_EXPIRES_IN)),
+        setTokenWithExpiration(`verification:user:${user.id}`, token, toSeconds(C.JWT_VERIFY_EXPIRES_IN)),
         this.notificationService.sendVerificationEmail(user, token),
       ]);
 
@@ -139,10 +137,7 @@ export class AuthController {
       }
 
       const token = generateJwtToken({ userId: user.id }, C.JWT_LOGIN_EXPIRES_IN);
-      await Promise.all([
-        redisClient.set(`session:user:${user.id}`, token),
-        redisClient.expire(`session:user:${user.id}`, toSeconds(C.JWT_LOGIN_EXPIRES_IN)),
-      ]);
+      setTokenWithExpiration(`session:user:${user.id}`, token, toSeconds(C.JWT_LOGIN_EXPIRES_IN));
 
       return res.status(200).json({ status: true, data: { user: mapUserToAppUser(user), token } });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -171,8 +166,7 @@ export class AuthController {
 
       const token = generateJwtToken({ userId: user.id, email: user.emailAddress }, C.JWT_FORGOT_PASSWORD_EXPIRES_IN);
       await Promise.all([
-        redisClient.set(`verification:user:${user.id}`, token),
-        redisClient.expire(`verification:user:${user.id}`, toSeconds(C.JWT_FORGOT_PASSWORD_EXPIRES_IN)),
+        setTokenWithExpiration(`verification:user:${user.id}`, token, toSeconds(C.JWT_FORGOT_PASSWORD_EXPIRES_IN)),
         this.notificationService.sendForgotPasswordEmail(user, token),
       ]);
 

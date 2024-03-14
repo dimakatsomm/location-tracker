@@ -285,12 +285,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorDto'
   /auth/forgot-password:
-    post:'401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
+    post:
       tags:
         - auth
       summary: User forgot password
@@ -335,7 +330,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDto'
-  auth/logout:
+  /auth/logout:
     post:
       security:
         - bearerAuth: []
@@ -421,13 +416,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserCoordinat'401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'esDto'
-        required: true
+              $ref: '#/components/schemas/UserCoordinatesDto'
       responses:
         '201':
           description: Created

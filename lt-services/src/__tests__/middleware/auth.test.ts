@@ -1,4 +1,4 @@
-import { validateUserToken, validateUser } from '../../middleware/auth.middleware';
+import { validateUserSession, validateUser } from '../../middleware/auth.middleware';
 import { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 import * as validator from 'validator';
@@ -11,7 +11,7 @@ jest.mock('../../constants', () => ({
 }));
 
 describe('Auth Middleware', () => {
-  describe('validateUserToken', () => {
+  describe('validateUserSession', () => {
     let mockRequest: Partial<Request>;
     let mockResponse: Partial<Response>;
     let nextFunction: jest.Mock;
@@ -26,14 +26,14 @@ describe('Auth Middleware', () => {
     });
 
     it('should return 401 if no token is provided', () => {
-      validateUserToken()(mockRequest as Request, mockResponse as Response, nextFunction);
+      validateUserSession()(mockRequest as Request, mockResponse as Response, nextFunction);
       expect(mockResponse.status).toHaveBeenCalledWith(401);
     });
 
     it('should return 401 if token is not a valid JWT', () => {
       mockRequest.headers = { authorization: 'invalid_token' };
       validator.isJWT.mockReturnValue(false);
-      validateUserToken()(mockRequest as Request, mockResponse as Response, nextFunction);
+      validateUserSession()(mockRequest as Request, mockResponse as Response, nextFunction);
       expect(mockResponse.status).toHaveBeenCalledWith(401);
     });
 
@@ -43,7 +43,7 @@ describe('Auth Middleware', () => {
       jwt.verify.mockImplementation(() => {
         throw new Error('verification failed');
       });
-      validateUserToken()(mockRequest as Request, mockResponse as Response, nextFunction);
+      validateUserSession()(mockRequest as Request, mockResponse as Response, nextFunction);
       expect(mockResponse.status).toHaveBeenCalledWith(401);
     });
 
@@ -51,7 +51,7 @@ describe('Auth Middleware', () => {
       mockRequest.headers = { authorization: 'valid_token' };
       validator.isJWT.mockReturnValue(true);
       jwt.verify.mockReturnValue({ userId: '123' });
-      validateUserToken()(mockRequest as Request, mockResponse as Response, nextFunction);
+      validateUserSession()(mockRequest as Request, mockResponse as Response, nextFunction);
       expect(nextFunction).toHaveBeenCalled();
     });
   });

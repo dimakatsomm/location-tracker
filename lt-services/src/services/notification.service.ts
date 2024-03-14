@@ -3,7 +3,7 @@ import { TransportOptions, createTransport } from 'nodemailer';
 
 import * as C from '../constants';
 import { IAppUser, IVerifyUser } from 'interfaces/user.interface';
-import { logError } from 'utils/logger.utils';
+import { logError } from '../utils/logger.utils';
 
 const trasporter = createTransport({
   host: C.SMTP_SERVER,
