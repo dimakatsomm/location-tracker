@@ -1,7 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { JwtPayload, verify } from 'jsonwebtoken';
 import { isJWT } from 'validator';
+
 import * as C from '../constants';
+import { logError } from 'utils/logger.utils';
 
 export const validateUserToken = () => (req: Request, res: Response, next: NextFunction) => {
   const token = req.headers.authorization;
@@ -14,7 +16,7 @@ export const validateUserToken = () => (req: Request, res: Response, next: NextF
     const decodedToken = verify(token, C.JWT_SECRET_KEY) as JwtPayload;
     req.auth = { userId: decodedToken.userId };
   } catch (e) {
-    console.error(e);
+    logError(e);
     return res.status(401).json({ status: false, data: { message: 'Invalid user token. Access denied.', error: e } });
   }
   next();
@@ -30,7 +32,7 @@ export const validateUser = () => (req: Request, res: Response, next: NextFuncti
     const decodedToken = verify(token, C.JWT_SECRET_KEY) as JwtPayload;
     req.auth = { userId: decodedToken.userId, email: decodedToken.email };
   } catch (e) {
-    console.error(e);
+    logError(e);
     return res.status(401).json({ status: false, data: { message: 'Invalid user token. Access denied.', error: e } });
   }
   next();
