@@ -160,8 +160,7 @@ export class AuthController {
 
       return res.status(200).json({ status: true, data: { message: `Password reset link has been sent.` } });
     } catch (e) {
-      console.error(e);
-      return res.status(500).json({ status: false, data: e });
+      handleError(res, e);
     }
   };
 
@@ -187,8 +186,7 @@ export class AuthController {
 
       return res.status(302).redirect(`${C.APP_LINK}/login`);
     } catch (e) {
-      console.error(e);
-      return res.status(500).json({ status: false, data: e });
+      handleError(res, e);
     }
   };
 }

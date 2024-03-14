@@ -3,6 +3,7 @@ import { TransportOptions, createTransport } from 'nodemailer';
 
 import * as C from '../constants';
 import { IAppUser, IVerifyUser } from 'interfaces/user.interface';
+import { logError } from 'utils/logger.utils';
 
 const trasporter = createTransport({
   host: C.SMTP_SERVER,
@@ -34,7 +35,7 @@ export class NotificationService {
     try {
       await trasporter.sendMail(mailOptions);
     } catch (e) {
-      console.error('Failed to send email:', e);
+      logError(e);
       throw new Error('Email sending failed');
     }
   }
