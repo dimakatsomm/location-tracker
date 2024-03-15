@@ -39,7 +39,7 @@ export class LocationService {
   private validateLocation(location: NodeGeocoder.Entry[], coordinates: ICoordinates): void {
     if (!location?.length) {
       throw new Error(
-        `No location has been found with coordinates, latitude: ${coordinates.lat} and longitude: ${coordinates.lat}`,
+        `No location has been found with coordinates, latitude: ${coordinates.lat} and longitude: ${coordinates.lon}`,
       );
     }
   }
