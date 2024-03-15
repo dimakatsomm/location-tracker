@@ -33,9 +33,10 @@ export const hashPassword = async (password: string): Promise<string> => {
 };
 
 // Utility for session storing
-export const setTokenWithExpiration = async (key: string, token: string, expirationInSeconds: number): Promise<void> => {
-  await Promise.all([
-    redisClient.set(key, token),
-    redisClient.expire(key, expirationInSeconds),
-  ]);
+export const setTokenWithExpiration = async (
+  key: string,
+  token: string,
+  expirationInSeconds: number,
+): Promise<void> => {
+  await Promise.all([redisClient.set(key, token), redisClient.expire(key, expirationInSeconds)]);
 };

@@ -14,8 +14,8 @@ const logger: Logger = createLogger({
     format.json(),
   ),
   transports: [
-    new transports.File({ filename: `${formattedDate}-error.log`, level: 'error' }),
-    new transports.File({ filename: `${formattedDate}-combined.log` }),
+    new transports.File({ filename: `logs/${formattedDate}-error.log`, level: 'error' }),
+    new transports.File({ filename: `logs/${formattedDate}-combined.log` }),
   ],
 });
 
@@ -28,6 +28,7 @@ if (process.env.NODE_ENV !== 'production') {
   );
 }
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const logError = (e: any) => {
   logger.error(e);
 };
