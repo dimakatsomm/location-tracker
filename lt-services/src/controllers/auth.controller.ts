@@ -36,7 +36,9 @@ export class AuthController {
         password: '',
       });
       if (userExists) {
-        return res.status(409).json({ status: false, data: { message: `Username or email address is already in use.` } });
+        return res
+          .status(409)
+          .json({ status: false, data: { message: `Username or email address is already in use.` } });
       }
 
       const user: IVerifyUser = await this.userService.register(newUser);
@@ -161,7 +163,9 @@ export class AuthController {
       }
 
       if (!user.verified) {
-        return res.status(403).json({ status: false, data: { message: `Account not verified. Please verify account.` } });
+        return res
+          .status(403)
+          .json({ status: false, data: { message: `Account not verified. Please verify account.` } });
       }
 
       const token = generateJwtToken({ userId: user.id, email: user.emailAddress }, C.JWT_FORGOT_PASSWORD_EXPIRES_IN);
@@ -192,7 +196,9 @@ export class AuthController {
       }
 
       if (!user.verified) {
-        return res.status(403).json({ status: false, data: { message: `Account not verified. Please verify account.` } });
+        return res
+          .status(403)
+          .json({ status: false, data: { message: `Account not verified. Please verify account.` } });
       }
 
       await this.userService.updatePassword(user.id, req.body.password);

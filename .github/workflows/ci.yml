@@ -1,3 +1,5 @@
+name: Deploy Location Tracker Services to Render
+
 on:
   pull_request:
   push:

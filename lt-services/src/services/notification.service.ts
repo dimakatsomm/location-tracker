@@ -34,6 +34,7 @@ export class NotificationService {
     };
     try {
       await trasporter.sendMail(mailOptions);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       logError(e);
       throw new Error(`Email sending failed: ${e.data?.message || e.message || ''}`);
