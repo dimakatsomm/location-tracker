@@ -2,6 +2,14 @@
   "name": "lt-services",
   "version": "1.0.0",
   "description": "Location Tracker Services",
+  "homepage": "https://location-tracker-08nr.onrender.com/services/",
+  "bugs": {
+    "url": "https://github.com/dimakatsomm/location-tracker/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dimakatsomm/location-tracker.git"
+  },
   "main": "./dist/index.js",
   "scripts": {
     "test": "jest",
@@ -11,7 +19,8 @@
     "watch:build": "tsc --watch",
     "watch:server": "nodemon '../dist/index.js' --watch '../dist'",
     "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint . --ext .ts --fix"
+    "lint:fix": "eslint . --ext .ts --fix",
+    "db:seed": "node ./dist/database/seeders/country.seeder.js"
   },
   "keywords": [],
   "author": "Dimakatso Makgatho <dimakatsomm@icloud.com>",
