@@ -1,11 +1,17 @@
 export interface ICountry {
   id: string;
   name: string;
-  capital: string;
-  region: string;
-  currencyCode: string;
-  languageCode: string;
+  capital?: string;
+  region?: string;
+  currency: {
+    code: string;
+    name: string;
+    symbol?: string;
+  };
+  language: {
+    code: string;
+    name: string;
+    nativeName?: string;
+  };
   flag: string;
-  diallingCode: string;
-  isoCode: string;
 }

@@ -19,47 +19,65 @@ const countrySchema = new Schema(
     },
     capital: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
     },
     region: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
     },
-    currencyCode: {
-      type: String,
+    currency: {
+      type: Schema.Types.Mixed,
       required: true,
-      uppercase: true,
-      trim: true,
-      minLength: 2,
-      maxLength: 3,
+      code: {
+        type: String,
+        required: true,
+        uppercase: true,
+        trim: true,
+        minLength: 2,
+        maxLength: 3,
+
+      },
+      name: {
+        type: String,
+        required: true,
+        trim: true,
+        minLength: 2,
+      },
+      symbol: {
+        type: String,
+        required: false,
+        trim: true,
+      }
     },
-    languageCode: {
-      type: String,
+    language: {
+      type: Object,
       required: true,
-      uppercase: true,
-      trim: true,
-      minLength: 2,
-      maxLength: 3,
+      code: {
+        type: String,
+        required: true,
+        uppercase: true,
+        trim: true,
+        minLength: 2,
+        maxLength: 3,
+
+      },
+      name: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      nativeName: {
+        type: String,
+        required: false,
+        trim: true,
+      }
     },
     flag: {
       type: String,
       required: true,
       trim: true,
-    },
-    diallingCode: {
-      type: String,
-      required: false,
-      trim: true,
-    },
-    isoCode: {
-      type: String,
-      required: false,
-      uppercase: true,
-      trim: true,
-      minLength: 2,
-      maxLength: 3,
     },
   },
   {
